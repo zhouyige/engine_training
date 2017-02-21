@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E7672D81-B884-47CA-B835-ED8ED9C80868}</ProjectGuid>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <Keyword>ManagedCProj</Keyword>
+    <RootNamespace>Lean3D</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CLRSupport>true</CLRSupport>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\Gen\$(Configuration)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>..\Shared;..\Dependencies;..\HardwareManage;$(ProjectDir);..\ResourceManage;HardwareManage;ResourceManage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;glus.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies />
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shared\utImage.h" />
+    <ClInclude Include="HardwareManage\OGLBufferManager.h" />
+    <ClInclude Include="HardwareManage\OGLOcclusionQuery.h" />
+    <ClInclude Include="HardwareManage\OGLDeviceManager.h" />
+    <ClInclude Include="HardwareManage\OGLRenderBufferManager.h" />
+    <ClInclude Include="HardwareManage\OGLShaderManager.h" />
+    <ClInclude Include="HardwareManage\OGLTextureManager.h" />
+    <ClInclude Include="Lean3D.h" />
+    <ClInclude Include="Lean3DRoot.h" />
+    <ClInclude Include="Lean3Dvector.h" />
+    <ClInclude Include="LeanGPUTimer.h" />
+    <ClInclude Include="LeanPrerequisites.h" />
+    <ClInclude Include="LeanPrimitives.h" />
+    <ClInclude Include="LeanTimer.h" />
+    <ClInclude Include="LeanUtil.h" />
+    <ClInclude Include="ResourceManage\LeanAnimationRes.h" />
+    <ClInclude Include="ResourceManage\LeanGeometryRes.h" />
+    <ClInclude Include="ResourceManage\LeanMaterialRes.h" />
+    <ClInclude Include="ResourceManage\LeanPipelineRes.h" />
+    <ClInclude Include="ResourceManage\LeanResource.h" />
+    <ClInclude Include="ResourceManage\LeanResourceManager.h" />
+    <ClInclude Include="ResourceManage\LeanSceneGraphRes.h" />
+    <ClInclude Include="ResourceManage\LeanShaderRes.h" />
+    <ClInclude Include="ResourceManage\LeanTextureRes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Shared\utImage.cpp" />
+    <ClCompile Include="HardwareManage\OGLBufferManager.cpp" />
+    <ClCompile Include="HardwareManage\OGLOcclusionQuery.cpp" />
+    <ClCompile Include="HardwareManage\OGLDeviceManager.cpp" />
+    <ClCompile Include="HardwareManage\OGLRenderBufferManager.cpp" />
+    <ClCompile Include="HardwareManage\OGLShaderManager.cpp" />
+    <ClCompile Include="HardwareManage\OGLTextureManager.cpp" />
+    <ClCompile Include="Lean3DRoot.cpp" />
+    <ClCompile Include="LeanGPUTimer.cpp" />
+    <ClCompile Include="ResourceManage\LeanAnimationRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanGeometryRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanMaterialRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanPipelineRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanResource.cpp" />
+    <ClCompile Include="ResourceManage\LeanResourceManager.cpp" />
+    <ClCompile Include="ResourceManage\LeanSceneGraphRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanShaderRes.cpp" />
+    <ClCompile Include="ResourceManage\LeanTextureRes.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

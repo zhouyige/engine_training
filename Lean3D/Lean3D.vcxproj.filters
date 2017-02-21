@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="HardwareManage">
+      <UniqueIdentifier>{799171f6-306b-4c6f-a1b8-f5e9f20ea44d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceManage">
+      <UniqueIdentifier>{13a32e75-7f27-4e13-afd0-c0139b63d084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="SourceCode">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="SceneNodeManage">
+      <UniqueIdentifier>{f92aebea-0baa-4b13-b9a2-db2a46279f53}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Lean3D.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Lean3Dvector.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanPrerequisites.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanGPUTimer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLBufferManager.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanUtil.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLOcclusionQuery.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLRenderBufferManager.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLTextureManager.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLShaderManager.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareManage\OGLDeviceManager.h">
+      <Filter>HardwareManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanAnimationRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanGeometryRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanMaterialRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanPipelineRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanResource.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanResourceManager.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanShaderRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanTextureRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanTimer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanPrimitives.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Lean3DRoot.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utImage.h">
+      <Filter>SourceCode</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManage\LeanSceneGraphRes.h">
+      <Filter>ResourceManage</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LeanGPUTimer.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLBufferManager.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLOcclusionQuery.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLRenderBufferManager.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLTextureManager.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLShaderManager.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="HardwareManage\OGLDeviceManager.cpp">
+      <Filter>HardwareManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanAnimationRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanGeometryRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanMaterialRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanPipelineRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanResourceManager.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanShaderRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanTextureRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanResource.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="Lean3DRoot.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\utImage.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManage\LeanSceneGraphRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
