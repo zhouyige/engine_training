@@ -100,19 +100,9 @@ namespace Lean3D
 
 		uint32              shaderHandle;
 		uint32              lastUpdateStamp;
-
-		// y引擎一致变量Location
-		int                 uni_frameBufSize;
-		int                 uni_viewMat, uni_viewMatInv, uni_projMat, uni_viewProjMat, uni_viewProjMatInv, uni_viewerPos;
-		int                 uni_worldMat, uni_worldNormalMat, uni_nodeId, uni_customInstData;
-		int                 uni_skinMatRows;
-		int                 uni_lightPos, uni_lightDir, uni_lightColor;
-		int                 uni_shadowSplitDists, uni_shadowMats, uni_shadowMapSize, uni_shadowBias;
-		int                 uni_parPosArray, uni_parSizeAndRotArray, uni_parColorArray;
-		int                 uni_olayColor;
 		//用户自定义一致变量Location
-		std::vector< int >  customSamplers;
-		std::vector< int >  customUniforms;
+		std::vector< int >  samplers;
+		std::vector< int >  uniforms;
 
 
 		ShaderCombination() :

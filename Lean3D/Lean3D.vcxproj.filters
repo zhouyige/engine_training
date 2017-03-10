@@ -92,6 +92,9 @@
     <ClInclude Include="ResourceManage\LeanSceneGraphRes.h">
       <Filter>ResourceManage</Filter>
     </ClInclude>
+    <ClInclude Include="LeanRenderer.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LeanGPUTimer.cpp">
@@ -147,6 +150,9 @@
     </ClCompile>
     <ClCompile Include="ResourceManage\LeanSceneGraphRes.cpp">
       <Filter>ResourceManage</Filter>
+    </ClCompile>
+    <ClCompile Include="LeanRenderer.cpp">
+      <Filter>SourceCode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
