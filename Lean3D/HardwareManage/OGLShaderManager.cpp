@@ -78,6 +78,50 @@ namespace Lean3D
 
 	}
 
+	int OGLShaderManager::getActiveAttributeNum(uint32 shaderHandle)
+	{
+		int attribnum = 0;
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetProgramiv(shader.program.program, GL_ACTIVE_ATTRIBUTES, &attribnum);
+		return attribnum;
+	}
+
+	int OGLShaderManager::getActiveUniformNum(uint32 shaderHandle)
+	{
+		int uniformnum = 0;
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetProgramiv(shader.program.program, GL_ACTIVE_UNIFORMS, &uniformnum);
+		return uniformnum;
+	}
+
+	int OGLShaderManager::getActiveAttributeMaxLength(uint32 shaderHandle)
+	{
+		int length = 0;
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetProgramiv(shader.program.program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &length);
+		return length;
+	}
+
+	int OGLShaderManager::getActiveUniformMaxLength(uint32 shaderHandle)
+	{
+		int length = 0;
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetProgramiv(shader.program.program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &length);
+		return length;
+	}
+
+	void OGLShaderManager::getActiveAttrib(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name)
+	{
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetActiveAttrib(shader.program.program, index, bufSize, length, size, type, name);
+	}
+
+	void OGLShaderManager::getActiveUniform(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name)
+	{
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+		glGetActiveUniform(shader.program.program, index, bufSize, length, size, type, name);
+	}
+
 	uint32 OGLShaderManager::createComputeShader(const char *computeShaderSrc)
 	{
 		ComuseShader newShader;
@@ -126,7 +170,7 @@ namespace Lean3D
 		glUseProgram(shader.program.program);
 	}
 
-	void OGLShaderManager::setShaderUniform(int loc, ShaderUniformType type, void *values, uint32 count /*= 1*/)
+	void OGLShaderManager::setShaderUniform(int loc, UniformType type, void *values, uint32 count /*= 1*/)
 	{
 		switch (type)
 		{

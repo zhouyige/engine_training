@@ -4,7 +4,7 @@
 namespace Lean3D
 {
 	//着色器
-	enum ShaderUniformType
+	enum UniformType
 	{
 		UNIFORM_FLOAT,
 		UNIFORM_FLOAT2,
@@ -39,7 +39,7 @@ namespace Lean3D
 		void setCurrentComputeShader(uint32 shaderHandle);
 
 		//这里这的uniform指不包括sampler的一致变量
-		void setShaderUniform(int loc, ShaderUniformType type, void *values, uint32 count = 1);
+		void setShaderUniform(int loc, UniformType type, void *values, uint32 count = 1);
 		void setShaderSampler(int loc, uint32 texUnit);
 		
 		int getShaderUniformLoc(uint32 shaderHandle, const char *name);
@@ -52,6 +52,14 @@ namespace Lean3D
 		const char *getDefaultFSCode();
 
 		void setPragramAttribLoc(uint32 shaderHandle, VertexAttribLayoutList &vaolist);
+
+		int getActiveAttributeNum(uint32 shaderHandle);
+		int getActiveUniformNum(uint32 shaderHandle);
+		int getActiveAttributeMaxLength(uint32 shaderHandle);
+		int getActiveUniformMaxLength(uint32 shaderHandle);
+		void getActiveAttrib(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+		void getActiveUniform(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+
 
 		std::string &getShaderLog() { return _shaderLog; }
 		
