@@ -154,4 +154,14 @@ namespace Lean3D
 		return 0;
 	}
 
+	void ResourceManager::setRootPath(std::string path)
+	{
+		_rootPath = path;
+	}
+
+	std::string ResourceManager::getRootPath()
+	{
+		return _rootPath;
+	}
+
 }

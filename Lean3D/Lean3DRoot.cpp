@@ -133,6 +133,8 @@ namespace Lean3D
 	{
 		bool result = true;  //返回值，所有文件读取成功标志
 
+		_resourceManager->setRootPath(contentPath);
+
 		std::string dir;
 		std::vector<std::string> dirs;
 		//分割路径字符串

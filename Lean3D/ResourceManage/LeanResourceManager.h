@@ -41,10 +41,13 @@ namespace Lean3D
 		std::vector <Resource*> &getResourceList() { return _resources; }
 
 		ResHandle queryUnloadedResource(int index);
+		void setRootPath(std::string path);
+		std::string getRootPath();
 
 	protected:
 		ResHandle addResource(Resource &res);
 	private:
+		std::string			_rootPath;
 		std::vector<Resource*> _resources;
 		std::map<int, ResourceRegEntry> _registry; //支持的所有资源类型
 	};
