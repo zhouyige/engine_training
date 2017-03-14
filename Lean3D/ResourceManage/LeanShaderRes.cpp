@@ -1,11 +1,12 @@
+#include <fstream>
 #include "LeanShaderRes.h"
 #include "Lean3DRoot.h"
 #include "LeanResourceManager.h"
 
+
 namespace Lean3D
 {
-
-
+	
 	CodeResource::CodeResource(const std::string &name, int flags)
 				: Resource(ResourceTypes::Code, name , flags)
 	{
@@ -36,7 +37,7 @@ namespace Lean3D
 	{
 		for (uint32 i = 0; i < _include.size(); ++i)
 		{
-			_include[i].first = 0x0;
+			_include[i].first = "";
 		}
 
 		_include.clear();
@@ -96,10 +97,37 @@ namespace Lean3D
 					if (nameBeigin != 0x0 && nameEnd != 0x0)
 					{
 						std::string resName(nameBeigin, nameEnd);
-						ResHandle handle =  LeanRoot::resMana().addResource(ResourceTypes::Code, resName, 0, false);
-						CodeResource *codeRes = (CodeResource*)LeanRoot::resMana().resolveResHandle(handle);
-						//CodeResource *codeRes =  (CodeResource*)CodeResource::factoryFunc(resName, 0);
-						_include.push_back(std::pair<ReferenceCountPtr<CodeResource>, size_t>(codeRes, pCode - code));
+						resName = LeanRoot::resMana().getRootPath()+ "\\" +resName;
+						int bufSize = 1000;
+						char *dataBuf = new char[bufSize];
+						int fileSize = 0;
+						std::ifstream inf;
+						inf.open(resName.c_str(), std::ios::binary);
+						//打开资源文件
+						if (inf.good())
+						{
+							//获取文件大小
+							inf.seekg(0, std::ios::end);
+							fileSize = inf.tellg();
+							if (bufSize < fileSize)
+							{
+								delete[] dataBuf;
+								dataBuf = new char[fileSize + 1];
+								if (!dataBuf)
+								{
+									bufSize = 0;
+									continue;
+								}
+								bufSize = fileSize;
+							}
+							if (fileSize == 0) continue;
+							//复制文件数据输入流到内存
+							inf.seekg(0);
+							inf.read(dataBuf, fileSize);
+							inf.close();
+						}
+						std::string includeCode = std::string(dataBuf, fileSize);
+						_include.push_back(std::pair<std::string, std::string>(resName, includeCode));
 
 					}
 					else
@@ -138,80 +166,32 @@ namespace Lean3D
 		//因为include的文件并未load，所以contextcompile不会通过
 		//当每读取一次codeResource检查include是否读取完整
 		//一段完整shader代码读取成功，则调用contextCompile成功
-		updateShaders();
+		updateCode();
 
 		return true;
 	}
 
-	bool CodeResource::hasDependency(CodeResource *codeRes)
+	void CodeResource::includeCodeReplace(std::string &out, std::string &codename, std::string &code)
 	{
-		if (codeRes == this) return true;
-		for (uint32 i = 0; i < _include.size(); ++i)
+		std::string::size_type pos = 0;
+		codename = "\"" + codename + "\"";
+		std::string::size_type a = codename.size();
+		std::string::size_type b = code.size();
+		while ((pos = out.find(codename, pos)) != std::string::npos)
 		{
-			if (_include[i].first->hasDependency(codeRes))
-				return true;
+			out.replace(pos, a, code);
+			pos += b;
 		}
-		return false;
 	}
 
-	bool CodeResource::getCodeLinkFlags(uint32 *flagMask)
+	void CodeResource::updateCode()
 	{
-		//检查相关联的code文件是否都被load
-		if (!_loaded) return false;
-		if (flagMask != 0x0) *flagMask |= _flagMask;
-		for (uint32 i = 0; i < _include.size(); ++i)
+		std::vector<std::pair<std::string, std::string>>::iterator it = _include.begin();
+		for (; it != _include.end(); ++it)
 		{
-			if (!_include[i].first->getCodeLinkFlags(flagMask))
-				return false;
+			includeCodeReplace(_code, it->first, it->second);
 		}
-
-		return true;
-	}
-
-	std::string CodeResource::assembleCode()
-	{
-		if (!_loaded) return "";
-
-		std::string finalCode = _code;
-		uint32 offset = 0;
-
-		for (uint32 i = 0; i < _include.size(); ++i)
-		{
-			std::string includeCode = _include[i].first->assembleCode();
-			finalCode.insert(_include[i].second + offset, includeCode);
-			offset += (uint32)includeCode.length();
-		}
-
-		return finalCode;
-	}
-
-	void CodeResource::updateShaders()
-	{
-		//2016/05/24 add by zhou
-		for (uint32 i = 0; i < LeanRoot::resMana().getResourceList().size(); ++i)
-		{
-			Resource *res = LeanRoot::resMana().getResourceList()[i];
-			if (res != 0x0 && res->getType() == ResourceTypes::Shader)
-			{
-				ShaderResource *shaderRes = (ShaderResource*)res;
-				for (uint32 j = 0; j < shaderRes->getContexts().size(); ++j)
-				{
-					ShaderContext &context = shaderRes->getContexts()[j];
-					if (shaderRes->getCode(context.vertCodeIdx)->hasDependency(this)
-						|| shaderRes->getCode(context.fragCodeIdx)->hasDependency(this))
-					{
-						context.compiled = false;
-					}
-					else if ((context.geoCodeIdx != -1 && shaderRes->getCode(context.geoCodeIdx)->hasDependency(this))
-						|| (context.TescontCodeIdx != -1 && shaderRes->getCode(context.TescontCodeIdx)->hasDependency(this))
-						|| (context.TesevalCodeIdx != -1 && shaderRes->getCode(context.TesevalCodeIdx)->hasDependency(this)))
-					{
-						context.compiled = false;
-					}
-				}
-				shaderRes->compileContexts();
-			}
-		}
+		
 	}
 
 	std::string ShaderResource::_vertPreamble = "#version 110 core\n";
@@ -244,15 +224,15 @@ namespace Lean3D
 
 	void ShaderResource::release()
 	{
-		for (uint32 i = 0; i < _contexts.size(); ++i)
+		for (uint32 i = 0; i < _passes.size(); ++i)
 		{
-			for (uint32 j = 0; j < _contexts[i].shaderCombs.size(); ++j)
+			for (uint32 j = 0; j < _passes[i].shaderCombs.size(); ++j)
 			{
-				g_OGLDiv->shaderManaRef()->destroyShader(_contexts[i].shaderCombs[j].shaderHandle);
+				g_OGLDiv->shaderManaRef()->destroyShader(_passes[i].shaderCombs[j].shaderHandle);
 			}
 		}
 
-		_contexts.clear();
+		_passes.clear();
 		_samplers.clear();
 		_uniforms.clear();
 		_codeSections.clear();
@@ -336,7 +316,7 @@ namespace Lean3D
 		fxCode = 0x0;
 		if (!result) return false;
 
-		compileContexts();
+		compilePasses();
 
 		return true;
 	}
@@ -378,17 +358,18 @@ namespace Lean3D
 
 		while (tok.hasToken())
 		{
-			if (tok.checkToken("float"))
+			
+			if (tok.checkToken("int"))
 			{
 				ShaderUniform unifrom;
-				unifrom.size = 1;
-				unifrom.id = tok.getToken(identifier);
-				if (unifrom.id == "")
+				unifrom._type = ShaderVariableType::INT;
+				unifrom._name = tok.getToken(identifier);
+				if (unifrom._name == "")
 				{
 					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
 					return false;
 				}
-				unifrom.defValues[0] = unifrom.defValues[1] = unifrom.defValues[2] = unifrom.defValues[3] = 0.0f;
+				unifrom._defValue[0] = 0.0f;
 				if (tok.checkToken("<"))
 					if (!tok.seekToken(">"))
 					{
@@ -396,25 +377,50 @@ namespace Lean3D
 						return false;
 					}
 				if (tok.checkToken("="))
-					unifrom.defValues[0] = (float)atof(tok.getToken(floatnum));
+					unifrom._defValue[0] = (float)atof(tok.getToken(floatnum));
 				if (!tok.checkToken(";"))
 				{
 					LEAN_DEGUG_LOG("error Fx缺少 ; 在第%d行！", tok.getLine());
 					return false;
 				}
-				_uniforms.push_back(unifrom);		
+				_uniforms.push_back(unifrom);
 			}
-			else if (tok.checkToken("float4"))
+			else if(tok.checkToken("float"))
 			{
-				ShaderUniform uniform;
-				uniform.size = 4;
-				uniform.id = tok.getToken(identifier);
-				if (uniform.id == "")
+				ShaderUniform unifrom;
+				unifrom._type = ShaderVariableType::FLOAT;
+				unifrom._name = tok.getToken(identifier);
+				if (unifrom._name == "")
 				{
 					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
 					return false;
 				}
-				uniform.defValues[0] = uniform.defValues[1] = uniform.defValues[2] = uniform.defValues[3] = 0.0f;
+				unifrom._defValue[0] = 0.0f;
+				if (tok.checkToken("<"))
+					if (!tok.seekToken(">"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 > 在第%d行！", tok.getLine());
+						return false;
+					}
+				if (tok.checkToken("="))
+					unifrom._defValue[0] = (float)atof(tok.getToken(floatnum));
+				if (!tok.checkToken(";"))
+				{
+					LEAN_DEGUG_LOG("error Fx缺少 ; 在第%d行！", tok.getLine());
+					return false;
+				}
+				_uniforms.push_back(unifrom);
+			}
+			else if (tok.checkToken("float3"))
+			{
+				ShaderUniform uniform;
+				uniform._type = ShaderVariableType::FLOAT3;
+				uniform._name = tok.getToken(identifier);
+				if (uniform._name == "")
+				{
+					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
+					return false;
+				}
 				//跳过<>注释
 				if (tok.checkToken("<"))
 					if (!tok.seekToken(">"))
@@ -429,13 +435,177 @@ namespace Lean3D
 						LEAN_DEGUG_LOG("error Fx缺少 { 在第%d行！", tok.getLine());
 						return false;
 					}
-					uniform.defValues[0] = (float)atof(tok.getToken(floatnum));
+					uniform._defValue[0] = (float)atof(tok.getToken(floatnum));
 					if (tok.checkToken(","))
-						uniform.defValues[1] = (float)atof(tok.getToken(floatnum));
+						uniform._defValue[1] = (float)atof(tok.getToken(floatnum));
 					if (tok.checkToken(","))
-						uniform.defValues[2] = (float)atof(tok.getToken(floatnum));
+						uniform._defValue[2] = (float)atof(tok.getToken(floatnum));
+					if (!tok.checkToken("}"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 } 在第%d行！", tok.getLine());
+						return false;
+					}
+				}
+				if (!tok.checkToken(";"))
+				{
+					LEAN_DEGUG_LOG("error Fx缺少 ; 在第%d行！", tok.getLine());
+					return false;
+				}
+				_uniforms.push_back(uniform);
+			}
+			else if (tok.checkToken("float4"))
+			{
+				ShaderUniform uniform;
+				uniform._type = ShaderVariableType::FLOAT4;
+				uniform._name = tok.getToken(identifier);
+				if (uniform._name == "")
+				{
+					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
+					return false;
+				}
+				//跳过<>注释
+				if (tok.checkToken("<"))
+					if (!tok.seekToken(">"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 > 在第%d行！", tok.getLine());
+						return false;
+					}
+				if (tok.checkToken("="))
+				{
+					if (!tok.checkToken("{"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 { 在第%d行！", tok.getLine());
+						return false;
+					}
+					uniform._defValue[0] = (float)atof(tok.getToken(floatnum));
 					if (tok.checkToken(","))
-						uniform.defValues[3] = (float)atof(tok.getToken(floatnum));
+						uniform._defValue[1] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[2] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[3] = (float)atof(tok.getToken(floatnum));
+					if (!tok.checkToken("}"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 } 在第%d行！", tok.getLine());
+						return false;
+					}
+				}
+				if (!tok.checkToken(";"))
+				{
+					LEAN_DEGUG_LOG("error Fx缺少 ; 在第%d行！", tok.getLine());
+					return false;
+				}
+				_uniforms.push_back(uniform);
+			}
+			else if (tok.checkToken("float3x3"))
+			{
+				ShaderUniform uniform;
+				uniform._type = ShaderVariableType::FLOAT3x3;
+				uniform._name = tok.getToken(identifier);
+				if (uniform._name == "")
+				{
+					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
+					return false;
+				}
+				//跳过<>注释
+				if (tok.checkToken("<"))
+					if (!tok.seekToken(">"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 > 在第%d行！", tok.getLine());
+						return false;
+					}
+				if (tok.checkToken("="))
+				{
+					if (!tok.checkToken("{"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 { 在第%d行！", tok.getLine());
+						return false;
+					}
+					uniform._defValue[0] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[1] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[2] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[3] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[4] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[5] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[6] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[7] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[8] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[9] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[10] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[11] = (float)atof(tok.getToken(floatnum));
+					if (!tok.checkToken("}"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 } 在第%d行！", tok.getLine());
+						return false;
+					}
+				}
+			}
+			else if (tok.checkToken("float4x4"))
+			{
+				ShaderUniform uniform;
+				uniform._type = ShaderVariableType::FLOAT4x4;
+				uniform._name = tok.getToken(identifier);
+				if (uniform._name == "")
+				{
+					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
+					return false;
+				}
+				//跳过<>注释
+				if (tok.checkToken("<"))
+					if (!tok.seekToken(">"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 > 在第%d行！", tok.getLine());
+						return false;
+					}
+				if (tok.checkToken("="))
+				{
+					if (!tok.checkToken("{"))
+					{
+						LEAN_DEGUG_LOG("error Fx缺少 { 在第%d行！", tok.getLine());
+						return false;
+					}
+					uniform._defValue[0] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[1] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[2] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[3] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[4] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[5] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[6] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[7] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[8] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[9] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[10] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[11] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[12] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[13] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[14] = (float)atof(tok.getToken(floatnum));
+					if (tok.checkToken(","))
+						uniform._defValue[15] = (float)atof(tok.getToken(floatnum));
 					if (!tok.checkToken("}"))
 					{
 						LEAN_DEGUG_LOG("error Fx缺少 } 在第%d行！", tok.getLine());
@@ -453,24 +623,24 @@ namespace Lean3D
 					|| tok.checkToken("sampler3D", true))
 			{
 				ShaderSampler sampler;
-				sampler.sampState = SS_FILTER_TRILINEAR | SS_ANISO8 | SS_ADDR_WRAP;
+				sampler._sampState = SS_FILTER_TRILINEAR | SS_ANISO8 | SS_ADDR_WRAP;
 				if (tok.checkToken("sampler2D"))
 				{
-					sampler.type = TextureType::Tex2D;
-					sampler.defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$Tex2D");
+					sampler._type = TextureType::Tex2D;
+					sampler._defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$Tex2D");
 				}
 				else if (tok.checkToken("sampler3D"))
 				{
-					sampler.type = TextureType::Tex3D;
-					sampler.defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$Tex3D");
+					sampler._type = TextureType::Tex3D;
+					sampler._defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$Tex3D");
 				}
 				else if (tok.checkToken("samplerCube"))
 				{
-					sampler.type = TextureType::TexCube;
-					sampler.defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$TexCube");
+					sampler._type = TextureType::TexCube;
+					sampler._defTex = (TextureResource*)LeanRoot::resMana().findResource(ResourceTypes::Texture, "$TexCube");
 				}
-				sampler.id = tok.getToken(identifier);
-				if (sampler.id == "")
+				sampler._name = tok.getToken(identifier);
+				if (sampler._name == "")
 				{
 					LEAN_DEGUG_LOG("error Fx标识符错误！在第%d行！", tok.getLine());
 					return false;
@@ -514,7 +684,7 @@ namespace Lean3D
 							ResHandle texMap = LeanRoot::resMana().addResource(
 												ResourceTypes::Texture, std::string(tok.getToken(0x0))
 												, 0, false);
-							sampler.defTex = (TextureResource *)LeanRoot::resMana().resolveResHandle(texMap);
+							sampler._defTex = (TextureResource *)LeanRoot::resMana().resolveResHandle(texMap);
 
 						}
 						else if (tok.checkToken("TexUnit"))
@@ -524,29 +694,29 @@ namespace Lean3D
 								LEAN_DEGUG_LOG("error Fx缺少 = 在第%d行！", tok.getLine());
 								return false;
 							}
-							sampler.texUnit = (int)atoi(tok.getToken(intnum));
-							if (sampler.texUnit > 11)
+							sampler._texUnit = (int)atoi(tok.getToken(intnum));
+							if (sampler._texUnit > 11)
 							{
 								LEAN_DEGUG_LOG("error Fx TexUnit不能大于11 在第%d行！", tok.getLine());
 								return false;
 							}
-							if (sampler.texUnit >= 0)
+							if (sampler._texUnit >= 0)
 							{
-								unitFree[sampler.texUnit] = false;
+								unitFree[sampler._texUnit] = false;
 							}
 						}
 						else if (tok.checkToken("Address"))
 						{
-							sampler.sampState &= ~SS_ADDR_MASK;
+							sampler._sampState &= ~SS_ADDR_MASK;
 							if (!tok.checkToken("="))
 							{
 								LEAN_DEGUG_LOG("error Fx缺少 = 在第%d行！", tok.getLine());
 								return false;
 							}
 							if (tok.checkToken("Wrap"))
-								sampler.sampState |= SS_ADDR_WRAP;
+								sampler._sampState |= SS_ADDR_WRAP;
 							else if (tok.checkToken("Clamp"))
-								sampler.sampState |= SS_ADDR_CLAMP;
+								sampler._sampState |= SS_ADDR_CLAMP;
 							else
 							{
 								LEAN_DEGUG_LOG("error Fx 错误的纹理Address 在第%d行！", tok.getLine());
@@ -555,18 +725,18 @@ namespace Lean3D
 						}
 						else if (tok.checkToken("Filter"))
 						{
-							sampler.sampState &= ~SS_FILTER_MASK;
+							sampler._sampState &= ~SS_FILTER_MASK;
 							if (!tok.checkToken("="))
 							{
 								LEAN_DEGUG_LOG("error Fx 缺少 = 在第%d行！", tok.getLine());
 								return false;
 							}
 							if (tok.checkToken("Trilinear"))
-								sampler.sampState |= SS_FILTER_TRILINEAR;
+								sampler._sampState |= SS_FILTER_TRILINEAR;
 							else if (tok.checkToken("Bilinear"))
-								sampler.sampState |= SS_FILTER_BILINEAR;
+								sampler._sampState |= SS_FILTER_BILINEAR;
 							else if (tok.checkToken("None"))
-								sampler.sampState |= SS_FILTER_POINT;
+								sampler._sampState |= SS_FILTER_POINT;
 							else
 							{
 								LEAN_DEGUG_LOG("error Fx 错误的纹理Filter 在第%d行！", tok.getLine());
@@ -575,18 +745,18 @@ namespace Lean3D
 						}
 						else if (tok.checkToken("MaxAnisotropy"))
 						{
-							sampler.sampState &= ~SS_ANISO_MASK;
+							sampler._sampState &= ~SS_ANISO_MASK;
 							if (!tok.checkToken("="))
 							{
 								LEAN_DEGUG_LOG("error Fx 缺少 = 在第%d行！", tok.getLine());
 								return false;
 							}
 							uint32 maxAniso = (uint32)atoi(tok.getToken(intnum));
-							if (maxAniso <= 1) sampler.sampState |= SS_ANISO1;
-							else if (maxAniso <= 2) sampler.sampState |= SS_ANISO2;
-							else if (maxAniso <= 4) sampler.sampState |= SS_ANISO4;
-							else if (maxAniso <= 8) sampler.sampState |= SS_ANISO8;
-							else sampler.sampState |= SS_ANISO16;
+							if (maxAniso <= 1) sampler._sampState |= SS_ANISO1;
+							else if (maxAniso <= 2) sampler._sampState |= SS_ANISO2;
+							else if (maxAniso <= 4) sampler._sampState |= SS_ANISO4;
+							else if (maxAniso <= 8) sampler._sampState |= SS_ANISO8;
+							else sampler._sampState |= SS_ANISO16;
 						}
 						else
 						{
@@ -608,9 +778,9 @@ namespace Lean3D
 				}
 				_samplers.push_back(sampler);
 			}
-			else if (tok.checkToken("context"))
+			else if (tok.checkToken("pass"))
 			{
-				ShaderContext context;
+				ShaderPass context;
 				_tmpCode0 = _tmpCode1 = "";
 				_tmpCode2 = _tmpCode3 = _tmpCode4 = "";
 				context.id = tok.getToken(identifier);
@@ -881,7 +1051,7 @@ namespace Lean3D
 					LEAN_DEGUG_LOG("error context：%s引用的TessellationEvalutionShader未找到！", context.id.c_str());
 					return false;
 				}
-				_contexts.push_back(context);
+				_passes.push_back(context);
 			}
 			else
 			{
@@ -892,18 +1062,18 @@ namespace Lean3D
 		//纹理单元分配
 		for (uint32 i = 0; i < _samplers.size(); ++i)
 		{
-			if (_samplers[i].texUnit < 0)
+			if (_samplers[i]._texUnit < 0)
 			{
 				for (uint32 j = 0; j < 12; ++j)
 				{
 					if (unitFree[j])
 					{
-						_samplers[i].texUnit = j;
+						_samplers[i]._texUnit = j;
 						unitFree[j] = false;
 						break;
 					}
 				}
-				if (_samplers[i].texUnit < 0)
+				if (_samplers[i]._texUnit < 0)
 				{
 					LEAN_DEGUG_LOG("error Fx 纹理单元不足！", 0);
 					return false;
@@ -933,135 +1103,19 @@ namespace Lean3D
 		return combMask;
 	}
 
-	void ShaderResource::compileContexts()
+	void ShaderResource::compilePasses()
 	{
-		for (uint32 i = 0; i < _contexts.size(); ++i)
+		for (uint32 i = 0; i < _passes.size(); ++i)
 		{
-			ShaderContext &context = _contexts[i];
+			ShaderPass &pass = _passes[i];
 
-			if (!context.compiled)
+			if (!pass.compiled)
 			{
-				context.flagMask = 0;
-				if (!getCode(context.vertCodeIdx)->getCodeLinkFlags(&context.flagMask)
-					|| !getCode(context.fragCodeIdx)->getCodeLinkFlags(&context.flagMask))
-				{
-					continue;
-				}
-				else if ((context.geoCodeIdx != -1 && !getCode(context.geoCodeIdx)->getCodeLinkFlags(&context.flagMask)) 
-					|| (context.TescontCodeIdx != -1 && !getCode(context.TescontCodeIdx)->getCodeLinkFlags(&context.flagMask)) 
-					|| (context.TesevalCodeIdx != -1 && !getCode(context.TesevalCodeIdx)->getCodeLinkFlags(&context.flagMask)))
-				{
-					continue;
-				}
-
-				//
-				for (std::set<uint32>::iterator it = _preLoadList.begin(); it != _preLoadList.end(); ++it)
-				{
-					uint32 combMask = *it & context.flagMask;
-					//检查combination是否已经存在
-					bool found = false;
-					for (size_t j = 0; j < context.shaderCombs.size(); ++j)
-					{
-						if (context.shaderCombs[j].combMask == combMask)
-						{
-							found = true;
-							break;
-						}
-					}
-					//如果没有存入过，加入context的comb
-					if (!found)
-					{
-						context.shaderCombs.push_back(ShaderCombination());
-						context.shaderCombs.back().combMask = combMask;
-					}
-				}
-				for (size_t j = 0; j < context.shaderCombs.size(); ++j)
-				{
-					compileCombination(context, context.shaderCombs[j]);
-				}
-				context.compiled = true;
+				pass.flagMask = 0;
+				compilePassCode(pass);
+				pass.compiled = true;
 			}
 		}
-	}
-
-	void ShaderResource::preLoadCombination(uint32 combMask)
-	{
-		if (!_loaded)
-		{
-			_preLoadList.insert(combMask);
-		}
-		else
-		{
-			for (uint32 i = 0; i < _contexts.size(); ++i)
-			{
-				if (getCombination(_contexts[i], combMask) == 0x0)
-					_preLoadList.insert(combMask);
-			}
-		}
-	}
-
-	Lean3D::ShaderCombination * ShaderResource::getCombination(ShaderContext &context, uint32 combMask)
-	{
-		if (!context.compiled)  return 0x0;
-
-		//与操作去掉context中不支持的flag
-		combMask &= context.flagMask;
-
-		//
-		std::vector<ShaderCombination> &combs = context.shaderCombs;
-		for (size_t i = 0; i <  combs.size(); ++i)
-		{
-			if (combs[i].combMask == combMask) return &combs[i];
-		}
-
-		//
-		combs.push_back(ShaderCombination());
-		combs.back().combMask = combMask;
-		compileCombination(context, combs.back());
-
-		return &combs.back();
-	}
-
-	void ShaderResource::bindComUniform(uint32 shaderHandle, ShaderCombination &sc)
-	{
-		// 设置公用uniform
-		int loc = g_OGLDiv->shaderManaRef()->getShaderSamplerLoc(shaderHandle, "shadowMap");
-		if (loc >= 0) g_OGLDiv->shaderManaRef()->setShaderSampler(loc, 12);
-
-		// 
-		sc.uni_frameBufSize = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "frameBufSize");
-
-		// 观察/投影 uniform
-		sc.uni_viewMat = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "viewMat");
-		sc.uni_viewMatInv = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "viewMatInv");
-		sc.uni_projMat = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "projMat");
-		sc.uni_viewProjMat = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "viewProjMat");
-		sc.uni_viewProjMatInv = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "viewProjMatInv");
-		sc.uni_viewerPos = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "viewerPos");
-
-		// 
-		sc.uni_worldMat = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "worldMat");
-		sc.uni_worldNormalMat = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "worldNormalMat");
-		sc.uni_nodeId = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "nodeId");
-		sc.uni_customInstData = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "customInstData[0]");
-		sc.uni_skinMatRows = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "skinMatRows[0]");
-
-		// 光照计算相关uniform
-		sc.uni_lightPos = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "lightPos");
-		sc.uni_lightDir = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "lightDir");
-		sc.uni_lightColor = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "lightColor");
-		sc.uni_shadowSplitDists = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "shadowSplitDists");
-		sc.uni_shadowMats = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "shadowMats");
-		sc.uni_shadowMapSize = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "shadowMapSize");
-		sc.uni_shadowBias = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "shadowBias");
-
-		// 粒子专用 uniforms
-		sc.uni_parPosArray = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "parPosArray");
-		sc.uni_parSizeAndRotArray = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "parSizeAndRotArray");
-		sc.uni_parColorArray = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "parColorArray");
-
-		// Overlay专用 uniforms
-		sc.uni_olayColor = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(shaderHandle, "olayColor");
 	}
 
 	int ShaderResource::getElemCount(int elem)
@@ -1069,7 +1123,7 @@ namespace Lean3D
 		switch (elem)
 		{
 		case ShaderElemType::ContextElem:
-			return (int)_contexts.size();
+			return (int)_passes.size();
 		case ShaderElemType::SamplerElem:
 			return (int)_samplers.size();
 		case ShaderElemType::UniformElem:
@@ -1099,7 +1153,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case ShaderElemType::SampDefTexResI:
-					return _samplers[elemIdx].defTex ? _samplers[elemIdx].defTex->getHandle() : 0;
+					return _samplers[elemIdx]._defTex ? _samplers[elemIdx]._defTex->getHandle() : 0;
 				}
 			}
 		}
@@ -1117,7 +1171,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case ShaderElemType::UnifDefValueF4:
-					if ((unsigned)compIdx < 4) return _uniforms[elemIdx].defValues[compIdx];
+					if ((unsigned)compIdx < 4) return _uniforms[elemIdx]._defValue[compIdx];
 					break;
 				}
 			}
@@ -1139,7 +1193,7 @@ namespace Lean3D
 				case ShaderElemType::UnifDefValueF4:
 					if ((unsigned)compIdx < 4)
 					{
-						_uniforms[elemIdx].defValues[compIdx] = value;
+						_uniforms[elemIdx]._defValue[compIdx] = value;
 						return;
 					}
 					break;
@@ -1156,12 +1210,12 @@ namespace Lean3D
 		switch (elem)
 		{
 		case ShaderElemType::ContextElem:
-			if ((unsigned)elemIdx < _contexts.size())
+			if ((unsigned)elemIdx < _passes.size())
 			{
 				switch (param)
 				{
 				case ShaderElemType::ContNameStr:
-					return _contexts[elemIdx].id.c_str();
+					return _passes[elemIdx].id.c_str();
 				}
 			}
 			break;
@@ -1171,7 +1225,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case ShaderElemType::SampNameStr:
-					return _samplers[elemIdx].id.c_str();
+					return _samplers[elemIdx]._name.c_str();
 				}
 			}
 			break;
@@ -1181,7 +1235,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case ShaderElemType::UnifNameStr:
-					return _uniforms[elemIdx].id.c_str();
+					return _uniforms[elemIdx]._name.c_str();
 				}
 			}
 			break;
@@ -1197,134 +1251,298 @@ namespace Lean3D
 		return false;
 	}
 
-	void ShaderResource::compileCombination(ShaderContext &context, ShaderCombination &sc)
+	void ShaderResource::compilePassCode(ShaderPass &pass)
 	{
-		uint32 combMask = sc.combMask;
-		_tmpCode0 = _vertPreamble;
-		_tmpCode1 = _fragPreamble;
+		//version and macros 
+		_tmpCode0 = _vertPreamble + _macrosPrefix;
+		_tmpCode1 = _fragPreamble + _macrosPrefix;
 
-		if (context.geoCodeIdx != -1)
+		if (pass.geoCodeIdx != -1)
+		{
 			_tmpCode2 = _geoPreamble;
+			_tmpCode2 += _macrosPrefix;
+		}
 		else
+		{
 			_tmpCode2 = "";
-		if (context.TescontCodeIdx != -1)
+		}
+
+		if (pass.TescontCodeIdx != -1)
+		{
 			_tmpCode3 = _tescontPreamble;
+			_tmpCode3 += _macrosPrefix;
+		}
 		else
+		{
 			_tmpCode3 = "";
-		if (context.TesevalCodeIdx != -1)
+		}
+
+		if (pass.TesevalCodeIdx != -1)
+		{
 			_tmpCode4 = _tesevalPreamble;
+			_tmpCode4 += _macrosPrefix;
+		}
 		else
+		{
 			_tmpCode4 = "";
-
-		if (combMask != 0)
-		{
-			for (uint32 i = 1; i <= 32; ++i)
-			{
-				if (combMask & (1 << (i-1)))
-				{
-					_tmpCode0 += "#define  _F";
-					_tmpCode0 += (char)(48+i/10);
-					_tmpCode0 += (char)(48+i%10);
-					_tmpCode0 += "_\r\n";
-
-					_tmpCode1 += "#define  _F";
-					_tmpCode1 += (char)(48 + i / 10);
-					_tmpCode1 += (char)(48 + i % 10);
-					_tmpCode1 += "_\r\n";
-
-					if (context.geoCodeIdx != -1)
-					{
-						_tmpCode2 += "#define  _F";
-						_tmpCode2 += (char)(48 + i / 10);
-						_tmpCode2 += (char)(48 + i % 10);
-						_tmpCode2 += "_\r\n";
-					}
-					if (context.TescontCodeIdx != -1)
-					{
-						_tmpCode3 += "#define  _F";
-						_tmpCode3 += (char)(48 + i / 10);
-						_tmpCode3 += (char)(48 + i % 10);
-						_tmpCode3 += "_\r\n";
-					}
-					if (context.TesevalCodeIdx != -1)
-					{					
-						_tmpCode4 += "#define  _F";
-						_tmpCode4 += (char)(48 + i / 10);
-						_tmpCode4 += (char)(48 + i % 10);
-						_tmpCode4 += "_\r\n";
-					}
-				}
-			}
 		}
 
-		_tmpCode0 += getCode(context.vertCodeIdx)->assembleCode();
-		_tmpCode1 += getCode(context.fragCodeIdx)->assembleCode();   
-		if (context.geoCodeIdx != -1)
-		{
-			_tmpCode2 += getCode(context.geoCodeIdx)->assembleCode();
-		}
-		if (context.TescontCodeIdx != -1)
-		{
-			_tmpCode3 += getCode(context.TescontCodeIdx)->assembleCode();
-		}
-		if (context.TesevalCodeIdx != -1)
-		{
-			_tmpCode4 += getCode(context.TesevalCodeIdx)->assembleCode();
-		}
-		 
+		_tmpCode0 += getCode(pass.vertCodeIdx)->getCode();
+		_tmpCode1 += getCode(pass.fragCodeIdx)->getCode();   
+			 
 		LEAN_DEGUG_LOG("Hit_Log -编译shader---%s", _name.c_str());
-		//编译前检查shader组合结构体是否包含曾被编译过的shader
-		if (sc.shaderHandle != 0)
-		{
-			g_OGLDiv->shaderManaRef()->destroyShader(sc.shaderHandle);
-			sc.shaderHandle = 0;
-		}
+		///TODO:编译前检查shader组合结构体是否包含曾被编译过的shader  
 
 		//编译shader
-		sc.shaderHandle = g_OGLDiv->shaderManaRef()->createShader(_tmpCode0.c_str()
+		pass.shaderHandle = g_OGLDiv->shaderManaRef()->createShader(_tmpCode0.c_str()
 																, _tmpCode3.c_str()
 																, _tmpCode4.c_str()
 																, _tmpCode2.c_str()
 																, _tmpCode1.c_str());
-		//2016/05/23 edit by zhou
-		///还未决定是否将公用一致变量在renderer中获取location
-		//ASSERT(0);
-		//if (1)
-		//{
-		//}
-		//else
+		
+
+		
+		GLint activeAttribNum = g_OGLDiv->shaderManaRef()->getActiveAttributeNum(pass.shaderHandle);
+		if (activeAttribNum > 0)
 		{
-			g_OGLDiv->shaderManaRef()->setCurrentShader(sc.shaderHandle);
-
-			bindComUniform(sc.shaderHandle, sc);
-
-			//
-			sc.customSamplers.reserve(_samplers.size());
-			for (int i = 0; i < _samplers.size(); ++i)
+			int length =  g_OGLDiv->shaderManaRef()->getActiveAttributeMaxLength(pass.shaderHandle);
+			if (length > 0)
 			{
-				int loc = g_OGLDiv->shaderManaRef()->getShaderSamplerLoc(sc.shaderHandle
-														, _samplers[i].id.c_str());
-				sc.customSamplers.push_back(loc);
-				
-				//设置对应纹理单元
-				if (loc >= 0)
-					g_OGLDiv->shaderManaRef()->setShaderSampler(loc, _samplers[i].texUnit);
-			}
+				char* attribName = new char[length + 1];
+				int attribSize = 0;
+				GLenum attribType;
+				int attribLocation;
+				for (int i = 0; i < activeAttribNum; ++i)
+				{
+					g_OGLDiv->shaderManaRef()->getActiveAttrib(pass.shaderHandle, i, length, NULL, &attribSize, &attribType, attribName);
+					attribName[length] = '\0';
+					attribLocation = g_OGLDiv->shaderManaRef()->getShaderAttributeLoc(pass.shaderHandle, attribName);
 
-			//
-			sc.customUniforms.reserve(_uniforms.size());
-			for (int i = 0; i < _uniforms.size(); ++i)
-			{
-				int loc = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(sc.shaderHandle
-														, _uniforms[i].id.c_str());
-				sc.customUniforms.push_back(loc);
+					ShaderAttribute attribute;
+					attribute._pass			= &pass;
+					attribute._index		= i;
+					attribute._name			= attribName;
+					attribute._location		= attribLocation;
+					attribute.setTypeByGLenum(attribType);
+					pass.attributes.emplace_back(attribute);
+				}
 			}
 		}
 
+		GLint activeUniformNum = g_OGLDiv->shaderManaRef()->getActiveUniformNum(pass.shaderHandle);
+		if (activeUniformNum > 0)
+		{
+			int length = g_OGLDiv->shaderManaRef()->getActiveUniformMaxLength(pass.shaderHandle);
+			if (length > 0)
+			{
+				char* uniformName = new char[length + 1];
+				int uniformSize = 0;
+				GLenum uniformType;
+				int uniformLocation;
+				for (int i = 0; i < activeUniformNum; ++i)
+				{
+					g_OGLDiv->shaderManaRef()->getActiveUniform(pass.shaderHandle, i, length, NULL, &uniformSize, &uniformType, uniformName);
+					uniformName[length] = '\0';
+					if (length > 3)
+					{
+						// If this is an array uniform, strip array indexers off it since GL does not
+						// seem to be consistent across different drivers/implementations in how it returns
+						// array uniforms. On some systems it will return "u_matrixArray", while on others
+						// it will return "u_matrixArray[0]".
+						char* c = strrchr(uniformName, '[');
+						if (c)
+						{
+							*c = '\0';
+						}
+					}
+					uniformLocation = g_OGLDiv->shaderManaRef()->getShaderUniformLoc(pass.shaderHandle, uniformName);
+					if (uniformType == GL_SAMPLER_2D || uniformType == GL_SAMPLER_3D || uniformType == GL_SAMPLER_CUBE)
+					{
+						ShaderSampler sampler;
+						sampler._pass				= &pass;
+						sampler._index				= i;
+						sampler._name				= uniformName;
+						sampler._location			= uniformLocation;
+						sampler.setTypeByGLenum(uniformType);
+						pass.samplers.emplace_back(sampler);
+						
+					}
+					else
+					{
+						ShaderUniform uniform;
+						uniform._pass				= &pass;
+						uniform._index				= i;
+						uniform._name				= uniformName;
+						uniform._location			= uniformLocation;
+						uniform.setTypeByGLenum(uniformType);
+						pass.uniforms.emplace_back(uniform);
+					}
+				}
+			}
+		}
+		
 		g_OGLDiv->shaderManaRef()->setCurrentShader(0);
 
 		///输出shader编译log
 		//if ()
+	}
+
+	const char* ShaderUniform::getName() const
+	{
+		return _name.c_str();
+	}
+
+	const Lean3D::ShaderVariableType ShaderUniform::getType() const
+	{
+		return _type;
+	}
+
+	Lean3D::ShaderPass* ShaderUniform::getShaderPass() const
+	{
+		return _pass;
+	}
+
+	void ShaderUniform::setTypeByGLenum(GLenum type)
+	{
+		switch (type)
+		{
+		case GL_INT:
+		{
+			_type = ShaderVariableType::INT;
+		}
+			break;
+		case GL_FLOAT:
+		{
+			_type = ShaderVariableType::FLOAT;
+		}
+			break;
+		case GL_FLOAT_VEC2:
+		{
+			_type = ShaderVariableType::FLOAT2;
+		}
+		break;
+		case GL_FLOAT_VEC3:
+		{
+			_type = ShaderVariableType::FLOAT3;
+		}
+			break;
+		case GL_FLOAT_VEC4:
+		{
+			_type = ShaderVariableType::FLOAT4;
+		}
+			break;
+		case GL_FLOAT_MAT3:
+		{
+			_type = ShaderVariableType::FLOAT3x3;
+		}
+			break;
+		case GL_FLOAT_MAT4:
+		{
+			_type = ShaderVariableType::FLOAT4x4;
+		}
+			break;
+		default:
+			ASSERT(false);
+			break;
+		}
+	}
+
+	ShaderUniform::ShaderUniform()
+		: _name(""), 
+		_location(-1),
+		_index(0),
+		_pass(NULL),
+		_type(ShaderVariableType::NONE)
+	{
+		for (int i = 0; i < 15; ++i)
+		{
+			_defValue[i] = 0;
+		}
+	}
+
+	const char* ShaderAttribute::getName() const
+	{
+		return _name.c_str();
+	}
+
+	const ShaderVariableType ShaderAttribute::getType() const
+	{
+		return _type;
+	}
+
+	Lean3D::ShaderPass* ShaderAttribute::getShaderPass() const
+	{
+		return _pass;
+	}
+
+	void ShaderAttribute::setTypeByGLenum(GLenum type)
+	{
+		switch (type)
+		{
+		case GL_INT:
+		{
+			_type = ShaderVariableType::INT;
+		}
+		break;
+		case GL_FLOAT:
+		{
+			_type = ShaderVariableType::FLOAT;
+		}
+		break;
+		case GL_FLOAT_VEC2:
+		{
+			_type = ShaderVariableType::FLOAT2;
+		}
+		break;
+		case GL_FLOAT_VEC3:
+		{
+			_type = ShaderVariableType::FLOAT3;
+		}
+		break;
+		case GL_FLOAT_VEC4:
+		{
+			_type = ShaderVariableType::FLOAT4;
+		}
+		break;
+		case GL_FLOAT_MAT3:
+		{
+			_type = ShaderVariableType::FLOAT3x3;
+		}
+		break;
+		case GL_FLOAT_MAT4:
+		{
+			_type = ShaderVariableType::FLOAT4x4;
+		}
+		break;
+		default:
+			ASSERT(false);
+			break;
+		}
+	}
+
+	ShaderAttribute::ShaderAttribute()
+		: _name(""),
+		_location(-1),
+		_index(0),
+		_pass(NULL),
+		_type(ShaderVariableType::NONE)
+	{
+	}
+
+	void ShaderSampler::setTypeByGLenum(GLenum type)
+	{
+		switch (type)
+		{
+		case GL_SAMPLER_2D:
+			_type = TextureType::List::Tex2D;
+			break;
+		case GL_SAMPLER_CUBE:
+			_type = TextureType::List::TexCube;
+			break;
+		default:
+			ASSERT(false);
+			break;
+		}
 	}
 
 }

@@ -6,6 +6,7 @@
 #include "Lean3DRoot.h"
 #include "OGLDeviceManager.h"
 #include <set>
+#include <list>
 
 namespace Lean3D
 {
@@ -24,23 +25,17 @@ namespace Lean3D
 		}
 
 		bool load(const char *data, int size);
-
-		bool hasDependency(CodeResource *codeRes);
-		bool getCodeLinkFlags(uint32 *flagMask);
-		std::string assembleCode();
-
-		bool isLoaded() { return _loaded; }
 		const std::string &getCode() { return _code; }
 
 	private:
-		void updateShaders();
+		void includeCodeReplace(std::string &out, std::string &codename, std::string &code);
+		void updateCode();
 
 	private:
 		uint32			_flagMask;
 		std::string		_code;
-		std::vector<std::pair<ReferenceCountPtr<CodeResource>, size_t>>  _include;
+		std::vector<std::pair<std::string, std::string>>  _include;
 	};
-
 
 	struct ShaderElemType
 	{
@@ -94,24 +89,109 @@ namespace Lean3D
 		};
 	};
 
-	struct ShaderCombination
+	enum class ShaderVariableType
 	{
-		uint32              combMask;
+		NONE,
+		INT,
+		FLOAT,
+		FLOAT2,
+		FLOAT3,
+		FLOAT4,
+		FLOAT3x3,
+		FLOAT4x4
+	};
+	
+	//struct ShaderCombination
+	//{
+	//	uint32              combMask;
 
-		uint32              shaderHandle;
-		uint32              lastUpdateStamp;
-		//用户自定义一致变量Location
-		std::vector< int >  samplers;
-		std::vector< int >  uniforms;
+	//	uint32              shaderHandle;
+	//	uint32              lastUpdateStamp;
+	//	//用户自定义一致变量Location
+	//	std::vector< int >  samplers;
+	//	std::vector< int >  uniforms;
 
 
-		ShaderCombination() :
-			combMask(0), shaderHandle(0), lastUpdateStamp(0)
+	//	ShaderCombination() :
+	//		combMask(0), shaderHandle(0), lastUpdateStamp(0)
+	//	{
+	//	}
+	//};
+
+	struct ShaderAttribute
+	{
+		friend class ShaderPass;
+		friend class ShaderResource;
+	public:
+		const char* getName() const;
+		const ShaderVariableType getType() const;
+		ShaderPass* getShaderPass() const;
+		void setTypeByGLenum(GLenum type);
+
+	private:
+
+		ShaderAttribute();
+		ShaderAttribute(const ShaderAttribute& copy){}
+		~ShaderAttribute(){}
+
+		ShaderAttribute& operator=(const ShaderAttribute&){}
+
+		std::string					_name;
+		GLint						_location;
+		ShaderVariableType			_type;
+		unsigned int				_index;
+		ShaderPass*					_pass;
+	};
+
+	struct ShaderSampler
+	{
+		friend class ShaderPass;
+		friend class ShaderResource;
+
+		void setTypeByGLenum(GLenum type);
+
+		unsigned int							_index;
+		std::string								_name;
+		TextureType::List						_type;
+		ReferenceCountPtr<TextureResource>      _defTex;
+		int										_texUnit;
+		uint32									_sampState;
+		GLint									_location;
+		ShaderPass*								_pass;
+
+		ShaderSampler() :
+			_texUnit(-1), _sampState(0),_pass(0x0)
 		{
 		}
 	};
 
-	struct ShaderContext
+	struct ShaderUniform
+	{
+		friend class ShaderPass;
+		friend class ShaderResource;
+	public:
+		const char* getName() const;
+		const ShaderVariableType getType() const;
+		ShaderPass* getShaderPass() const;
+		void setTypeByGLenum(GLenum type);
+
+	private:
+
+		ShaderUniform();
+		ShaderUniform(const ShaderUniform& copy){}
+		~ShaderUniform(){}
+
+		ShaderUniform& operator=(const ShaderUniform&){}
+
+		std::string					_name;
+		GLint						_location;
+		ShaderVariableType			_type;
+		unsigned int				_index;
+		float						_defValue[16]; // maybe a litter bit memory waste
+		ShaderPass*					_pass;
+	};
+	
+	struct ShaderPass
 	{
 		std::string                       id;
 		uint32                            flagMask;
@@ -125,13 +205,18 @@ namespace Lean3D
 		bool                              alphaToCoverage;
 
 		// Shaders
-		std::vector< ShaderCombination >  shaderCombs;
+		//std::vector< ShaderCombination >  shaderCombs;
+		uint32									  shaderHandle;
+		std::vector<ShaderUniform>		  uniforms;
+		std::vector<ShaderSampler>		  samplers;
+		std::vector<ShaderAttribute>	  attributes;
 		int                               vertCodeIdx, fragCodeIdx;
 		int								  geoCodeIdx, TescontCodeIdx, TesevalCodeIdx;
 		bool                              compiled;
 
 
-		ShaderContext() :
+
+		ShaderPass() :
 			blendMode(BlendModes::Replace), depthFunc(TestModes::LessEqual),
 			cullMode(CullModes::Back), depthTest(true), writeDepth(true), alphaToCoverage(false),
 			vertCodeIdx(-1), fragCodeIdx(-1), geoCodeIdx(-1), TescontCodeIdx(-1), TesevalCodeIdx(-1)
@@ -140,27 +225,7 @@ namespace Lean3D
 		}
 	};
 
-	struct ShaderSampler
-	{
-		std::string								id;
-		TextureType::List						type;
-		ReferenceCountPtr<TextureResource>      defTex;
-		int										texUnit;
-		uint32									sampState;
 
-
-		ShaderSampler() :
-			texUnit(-1), sampState(0)
-		{
-		}
-	};
-
-	struct ShaderUniform
-	{
-		std::string    id;
-		float          defValues[4];
-		unsigned char  size;
-	};
 
 	class ShaderResource : public Resource
 	{
@@ -187,8 +252,7 @@ namespace Lean3D
 
 		
 				
-		void preLoadCombination(uint32 combMask);
-		ShaderCombination *getCombination(ShaderContext &context, uint32 combMask);
+		void setPrefixMacros(std::vector<std::string> &macros);
 		void bindComUniform(uint32 shaderHandle,ShaderCombination &sc);
 
 		int getElemCount(int elem);
@@ -198,36 +262,37 @@ namespace Lean3D
 		const char *getElemParamStr(int elem, int elemIdx, int param);
 		bool setUniform(const std::string &name, float a, float b, float c, float d);
 
-		ShaderContext *findContext(const std::string &name)
+		ShaderPass *findPass(const std::string &name)
 		{
-			for (uint32 i = 0; i < _contexts.size(); ++i)
-				if (_contexts[i].id == name) return &_contexts[i];
+			for (uint32 i = 0; i < _passes.size(); ++i)
+				if (_passes[i].id == name) return &_passes[i];
 
 			return 0x0;
 		}
 		
-		std::vector< ShaderContext > &getContexts() { return _contexts; }
+		std::vector< ShaderPass > &getContexts() { return _passes; }
 		CodeResource *getCode(uint32 index) 
 		{ 
 			return &_codeSections[index]; 
 		}
 
-		void compileContexts();
+		void compilePasses();
 	protected:
 		bool parseFXSection(char *fxCode);
 
 		//创建编译shader,获取一致变量location
-		void compileCombination(ShaderContext &context, ShaderCombination &sc);
+		void compilePassCode(ShaderPass &context);
 
 	private:
 		static std::string				_vertPreamble, _fragPreamble;
 		static std::string				_geoPreamble, _tescontPreamble, _tesevalPreamble;
 		static std::string				_tmpCode0, _tmpCode1, _tmpCode2, _tmpCode3, _tmpCode4;
 
-		std::vector< ShaderContext >  _contexts;
-		std::vector< ShaderSampler >  _samplers;
-		std::vector< ShaderUniform >  _uniforms;
-		std::vector< CodeResource >   _codeSections;
-		std::set< uint32 >            _preLoadList;
+		std::string						_macrosPrefix;  // index:0-vertex 1-pixel 2-geo 3-tesscontrol 4-tesseva
+		std::vector< ShaderPass >		_passes;
+		std::vector< ShaderSampler >	_samplers;
+		std::vector< ShaderUniform >	_uniforms;
+		std::vector< CodeResource >		_codeSections;
+		std::set< uint32 >				_preLoadList;
 	};
 }
