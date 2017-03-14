@@ -103,9 +103,9 @@ namespace Lean3D
 				, std::string(node1.getAttribute("source"))
 				, 0, false);
 			_shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shader);
-
-			_combMask = ShaderResource::calcCombMask(_shaderFlags);
-			_shaderRes->preLoadCombination(_combMask);//插入combMask
+			_shaderRes->setPrefixMacros(_shaderFlags);
+			//_combMask = ShaderResource::calcCombMask(_shaderFlags);
+			//_shaderRes->preLoadCombination(_combMask);//插入combMask
 		}
 
 		//纹理资源
