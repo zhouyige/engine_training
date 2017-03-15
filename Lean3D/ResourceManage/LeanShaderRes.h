@@ -128,7 +128,7 @@ namespace Lean3D
 		ShaderPass* getShaderPass() const;
 		void setTypeByGLenum(GLenum type);
 
-	private:
+
 
 		ShaderAttribute();
 		ShaderAttribute(const ShaderAttribute& copy){}
@@ -175,7 +175,7 @@ namespace Lean3D
 		ShaderPass* getShaderPass() const;
 		void setTypeByGLenum(GLenum type);
 
-	private:
+	//private:
 
 		ShaderUniform();
 		ShaderUniform(const ShaderUniform& copy){}
@@ -253,7 +253,7 @@ namespace Lean3D
 		
 				
 		void setPrefixMacros(std::vector<std::string> &macros);
-		void bindComUniform(uint32 shaderHandle,ShaderCombination &sc);
+		//void bindComUniform(uint32 shaderHandle,ShaderCombination &sc);
 
 		int getElemCount(int elem);
 		int getElemParamI(int elem, int elemIdx, int param);

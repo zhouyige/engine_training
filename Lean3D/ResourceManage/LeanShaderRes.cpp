@@ -108,7 +108,7 @@ namespace Lean3D
 						{
 							//获取文件大小
 							inf.seekg(0, std::ios::end);
-							fileSize = inf.tellg();
+							fileSize = static_cast<int>(inf.tellg());
 							if (bufSize < fileSize)
 							{
 								delete[] dataBuf;
@@ -226,10 +226,7 @@ namespace Lean3D
 	{
 		for (uint32 i = 0; i < _passes.size(); ++i)
 		{
-			for (uint32 j = 0; j < _passes[i].shaderCombs.size(); ++j)
-			{
-				g_OGLDiv->shaderManaRef()->destroyShader(_passes[i].shaderCombs[j].shaderHandle);
-			}
+			g_OGLDiv->shaderManaRef()->destroyShader(_passes[i].shaderHandle);
 		}
 
 		_passes.clear();
@@ -1103,6 +1100,14 @@ namespace Lean3D
 		return combMask;
 	}
 
+	void ShaderResource::setPrefixMacros(std::vector<std::string> &macros)
+	{
+		for (int i = 0; i < macros.size(); ++i)
+		{
+			_macrosPrefix += "#define "+macros[i]+"\n";
+		}
+	}
+
 	void ShaderResource::compilePasses()
 	{
 		for (uint32 i = 0; i < _passes.size(); ++i)
@@ -1143,7 +1148,8 @@ namespace Lean3D
 				switch (param)
 				{
 				case ShaderElemType::UnifSizeI:
-					return _uniforms[elemIdx].size;
+					ASSERT(false);
+					return 0;
 				}
 			}
 			break;
@@ -1251,16 +1257,23 @@ namespace Lean3D
 		return false;
 	}
 
+	Lean3D::ShaderPass * ShaderResource::findPass(const std::string &name)
+	{
+		for (uint32 i = 0; i < _passes.size(); ++i)
+			if (_passes[i].id == name) return &_passes[i];
+
+		return 0x0;
+	}
+
 	void ShaderResource::compilePassCode(ShaderPass &pass)
 	{
 		//version and macros 
-		_tmpCode0 = _vertPreamble + _macrosPrefix;
-		_tmpCode1 = _fragPreamble + _macrosPrefix;
+		_tmpCode0 = _vertPreamble + "\n\n"+ _macrosPrefix;
+		_tmpCode1 = _fragPreamble + "\n\n" + _macrosPrefix;
 
 		if (pass.geoCodeIdx != -1)
 		{
-			_tmpCode2 = _geoPreamble;
-			_tmpCode2 += _macrosPrefix;
+			_tmpCode2 = _geoPreamble+ "\n\n" + _macrosPrefix;
 		}
 		else
 		{
@@ -1269,8 +1282,7 @@ namespace Lean3D
 
 		if (pass.TescontCodeIdx != -1)
 		{
-			_tmpCode3 = _tescontPreamble;
-			_tmpCode3 += _macrosPrefix;
+			_tmpCode3 = _tescontPreamble + "\n\n" + _macrosPrefix;
 		}
 		else
 		{
@@ -1279,8 +1291,7 @@ namespace Lean3D
 
 		if (pass.TesevalCodeIdx != -1)
 		{
-			_tmpCode4 = _tesevalPreamble;
-			_tmpCode4 += _macrosPrefix;
+			_tmpCode4 = _tesevalPreamble + "\n\n" + _macrosPrefix;
 		}
 		else
 		{
