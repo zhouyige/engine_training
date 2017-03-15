@@ -59,7 +59,7 @@ namespace Lean3D
 		int getActiveUniformMaxLength(uint32 shaderHandle);
 		void getActiveAttrib(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
 		void getActiveUniform(uint32 shaderHandle, GLuint index, GLsizei bufSize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
-
+		int getShaderAttributeLoc(uint32 shaderHandle, const char *name);
 
 		std::string &getShaderLog() { return _shaderLog; }
 		

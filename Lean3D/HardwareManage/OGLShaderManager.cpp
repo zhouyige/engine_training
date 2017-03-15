@@ -224,4 +224,11 @@ namespace Lean3D
 		return 0;
 	}
 
+	int OGLShaderManager::getShaderAttributeLoc(uint32 shaderHandle, const char *name)
+	{
+		ComuseShader &shader = _comuseShadersReflist.getRef(shaderHandle);
+
+		return  glGetAttribLocation(shader.program.program, name);
+	}
+
 }
