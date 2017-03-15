@@ -107,6 +107,14 @@ struct X
 	void increase_value() { a++; }
 };
 
+void stringinsertTest()
+{
+	string a = "abcdefgab";
+	string b = "b";
+	string c = "replace";
+	a.insert(c, b);
+
+}
 int _tmain(int argc, _TCHAR* argv[])
 {
 

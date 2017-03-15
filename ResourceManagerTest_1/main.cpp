@@ -41,24 +41,33 @@ GLUSboolean init(GLUSvoid)
 	matres = (MaterialResource*)LeanRoot::resMana().resolveResHandle(knightMatriRes);
 	uint32 shaderResHandle = matres->getElemParamI(MaterialElemType::MaterialElem, 0, MaterialElemType::MatShaderI);
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
-	ShaderContext* sc = shaderRes->findContext("AMBIENT");
-	geores->genGeomResVAO(sc->shaderCombs[0].shaderHandle);
+	ShaderPass* sc = shaderRes->findPass("AMBIENT");
+	//geores->genGeomResVAO(sc->shaderHandle);
 	int i = 0;
 	g_OGLDiv->clearColor(0.5f, 0.1f, 0.8f, 1.0f);
+
+
 	return GLUS_TRUE;
 }
 
 GLUSvoid reshape(GLUSint width, GLUSint height)
 {
+
 	g_OGLDiv->setViewport(0, 0, width, height);
 	GLfloat projectionMatrix[16];
 	glusMatrix4x4Perspectivef(projectionMatrix, 40.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);
 	uint32 shaderResHandle = matres->getElemParamI(MaterialElemType::MaterialElem, 0, MaterialElemType::MatShaderI);
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
-	ShaderContext* sc = shaderRes->findContext("AMBIENT");
-	g_OGLDiv->shaderManaRef()->setShaderUniform(sc->shaderCombs[0].uni_viewProjMat, UNIFORM_FLOAT44, projectionMatrix);
-
-
+	ShaderPass* sc = shaderRes->findPass("AMBIENT");
+	GLint location = 0;
+	for (int i = 0; i < sc->uniforms.size(); ++i)
+	{
+		if (sc->uniforms[i].getName() == "viewProjMat")
+		{
+			location = sc->uniforms[i]._location;
+		}
+	}
+	g_OGLDiv->shaderManaRef()->setShaderUniform(location, UNIFORM_FLOAT44, projectionMatrix);
 	
 }
 bool setMaterialRes(MaterialResource *matrialRes, const string &shaderContext, ShaderResource *shaderRes)
@@ -94,8 +103,8 @@ GLUSboolean update(GLUSfloat time)
 	g_OGLDiv->buffManaRef()->setCurrentVAO(geores->getVAOHandle());
 	uint32 shaderResHandle = matres->getElemParamI(MaterialElemType::MaterialElem, 0, MaterialElemType::MatShaderI);
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
-	ShaderContext* sc = shaderRes->findContext("AMBIENT");
-	g_OGLDiv->shaderManaRef()->setCurrentShader(sc->shaderCombs[0].shaderHandle);
+	ShaderPass* sc = shaderRes->findPass("AMBIENT");
+	g_OGLDiv->shaderManaRef()->setCurrentShader(sc->shaderHandle);
 	//g_OGLDiv->shaderManaRef()->setShaderSampler(sc->shaderCombs[0].)
 	g_OGLDiv->drawIndexed(GL_TRIANGLES, geores->getIndexCount(), GL_UNSIGNED_SHORT);
 	return GLUS_TRUE;
