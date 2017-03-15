@@ -214,8 +214,6 @@ namespace Lean3D
 		int								  geoCodeIdx, TescontCodeIdx, TesevalCodeIdx;
 		bool                              compiled;
 
-
-
 		ShaderPass() :
 			blendMode(BlendModes::Replace), depthFunc(TestModes::LessEqual),
 			cullMode(CullModes::Back), depthTest(true), writeDepth(true), alphaToCoverage(false),
@@ -262,15 +260,9 @@ namespace Lean3D
 		const char *getElemParamStr(int elem, int elemIdx, int param);
 		bool setUniform(const std::string &name, float a, float b, float c, float d);
 
-		ShaderPass *findPass(const std::string &name)
-		{
-			for (uint32 i = 0; i < _passes.size(); ++i)
-				if (_passes[i].id == name) return &_passes[i];
+		ShaderPass *findPass(const std::string &name);
 
-			return 0x0;
-		}
-		
-		std::vector< ShaderPass > &getContexts() { return _passes; }
+		std::vector< ShaderPass > &getPasses() { return _passes; }
 		CodeResource *getCode(uint32 index) 
 		{ 
 			return &_codeSections[index]; 

@@ -20,7 +20,6 @@ sampler2D normalMap = sampler_state
 {
 	Texture = "textures/common/defnorm.tga";
 };
-
 samplerCube ambientMap = sampler_state
 {
 	Address = Clamp;
@@ -35,31 +34,20 @@ samplerCube envMap = sampler_state
 	MaxAnisotropy = 1;
 };
 
-// Uniforms
-float4 matDiffuseCol <
-	string desc_abc = "abc: diffuse color";
-	string desc_d   = "d: alpha for opacity";
-> = {1.0, 1.0, 1.0, 1.0};
-
-float4 matSpecParams <
-	string desc_abc = "abc: specular color";
-	string desc_d   = "d: gloss";
-> = {0.04, 0.04, 0.04, 0.5};
-
 // Contexts
-context ATTRIBPASS
+pass ATTRIBPASS
 {
 	VertexShader = compile GLSL VS_GENERAL;
 	PixelShader = compile GLSL FS_ATTRIBPASS;
 }
 
-context SHADOWMAP
+pass SHADOWMAP
 {
 	VertexShader = compile GLSL VS_SHADOWMAP;
 	PixelShader = compile GLSL FS_SHADOWMAP;
 }
 
-context LIGHTING
+pass LIGHTING
 {
 	VertexShader = compile GLSL VS_GENERAL;
 	PixelShader = compile GLSL FS_LIGHTING;
@@ -68,7 +56,7 @@ context LIGHTING
 	BlendMode = Add;
 }
 
-context AMBIENT
+pass AMBIENT
 {
 	VertexShader = compile GLSL VS_GENERAL;
 	PixelShader = compile GLSL FS_AMBIENT;

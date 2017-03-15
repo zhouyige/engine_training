@@ -97,12 +97,12 @@ namespace Lean3D
 					if (nameBeigin != 0x0 && nameEnd != 0x0)
 					{
 						std::string resName(nameBeigin, nameEnd);
-						resName = LeanRoot::resMana().getRootPath()+ "\\" +resName;
+						std::string resPath = LeanRoot::resMana().getRootPath()+ "\/" +resName;
 						int bufSize = 1000;
 						char *dataBuf = new char[bufSize];
 						int fileSize = 0;
 						std::ifstream inf;
-						inf.open(resName.c_str(), std::ios::binary);
+						inf.open(resPath.c_str(), std::ios::binary);
 						//打开资源文件
 						if (inf.good())
 						{
@@ -150,8 +150,8 @@ namespace Lean3D
 					for (uint32 i = 0; i < 5; ++i)
 						*pCode++ = *pData++;
 					//忽略flag后面的提示字符
-					while (pData < eof && *pData != ' ' && *pData != '\t' && *pData != '\n' && *pData != '\r')
-						++pData;
+					//while (pData < eof && *pData != ' ' && *pData != '\t' && *pData != '\n' && *pData != '\r')
+					//	++pData;
 				}
 
 			}
@@ -160,7 +160,7 @@ namespace Lean3D
 		}
 
 		*pCode = '\0';
-		_code = code;
+		_code = data;
 		delete[] code;
 		code = 0x0;
 		//因为include的文件并未load，所以contextcompile不会通过
@@ -174,7 +174,7 @@ namespace Lean3D
 	void CodeResource::includeCodeReplace(std::string &out, std::string &codename, std::string &code)
 	{
 		std::string::size_type pos = 0;
-		codename = "\"" + codename + "\"";
+		codename = std::string("#include \"") +codename + "\"";
 		std::string::size_type a = codename.size();
 		std::string::size_type b = code.size();
 		while ((pos = out.find(codename, pos)) != std::string::npos)
@@ -1312,7 +1312,8 @@ namespace Lean3D
 																, _tmpCode1.c_str());
 		
 
-		
+		assert(pass.shaderHandle > 0);
+
 		GLint activeAttribNum = g_OGLDiv->shaderManaRef()->getActiveAttributeNum(pass.shaderHandle);
 		if (activeAttribNum > 0)
 		{
@@ -1452,6 +1453,21 @@ namespace Lean3D
 			_type = ShaderVariableType::FLOAT4x4;
 		}
 			break;
+		case GL_SAMPLER_2D_SHADOW:
+		{
+
+		}
+		break;
+		case GL_SAMPLER_2D:
+		{
+			
+		}
+		break;
+		case GL_SAMPLER_CUBE:
+		{
+
+		}
+		break;
 		default:
 			ASSERT(false);
 			break;
