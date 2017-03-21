@@ -184,5 +184,8 @@
     <ClCompile Include="..\Shared\utOpenGL.cpp">
       <Filter>shared</Filter>
     </ClCompile>
+    <ClCompile Include="LeanPrimitives.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

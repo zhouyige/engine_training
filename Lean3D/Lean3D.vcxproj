@@ -124,6 +124,7 @@
     <ClCompile Include="HardwareManage\OGLTextureManager.cpp" />
     <ClCompile Include="Lean3DRoot.cpp" />
     <ClCompile Include="LeanGPUTimer.cpp" />
+    <ClCompile Include="LeanPrimitives.cpp" />
     <ClCompile Include="LeanRenderer.cpp" />
     <ClCompile Include="ResourceManage\LeanAnimationRes.cpp" />
     <ClCompile Include="ResourceManage\LeanGeometryRes.cpp" />

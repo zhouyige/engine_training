@@ -110,4 +110,27 @@ namespace Lean3D
 	//ÊÓ×¶Ìå
 	//****************************************//
 
+	class Frustum
+	{
+	public:
+		const Vec3 &getOrigin() const { return _origin; }
+		const Vec3 &getCorner(unsigned int index) const { return _corners[index]; }
+
+		void buildViewFrustum(const Matrix4 &transMat, float fov, float aspect, float nearPlane, float farPlane);
+		void buildViewFrustum(const Matrix4 &transMat, float left, float right,
+			float bottom, float top, float nearPlane, float farPlane);
+		void buildViewFrustum(const Matrix4 &viewMat, const Matrix4 &projMat);
+		void buildBoxFrustum(const Matrix4 &transMat, float left, float right,
+			float bottom, float top, float front, float back);
+		bool cullSphere(Vec3 pos, float rad) const;
+		bool cullBox(BoundingBox &b) const;
+		bool cullFrustum(const Frustum &frust) const;
+
+		void calcAABB(Vec3 &mins, Vec3 &maxs) const;
+
+	private:
+		Plane  _planes[6];  // Planes of frustum
+		Vec3  _origin;
+		Vec3  _corners[8];  // Corner points
+	};
 }
