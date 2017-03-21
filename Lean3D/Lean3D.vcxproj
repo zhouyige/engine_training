@@ -79,7 +79,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shared\rapidxml.h" />
+    <ClInclude Include="..\Shared\rapidxml_print.h" />
+    <ClInclude Include="..\Shared\utDebug.h" />
     <ClInclude Include="..\Shared\utImage.h" />
+    <ClInclude Include="..\Shared\utMath.h" />
+    <ClInclude Include="..\Shared\utOpenGL.h" />
+    <ClInclude Include="..\Shared\utplatform.h" />
+    <ClInclude Include="..\Shared\utTimer.h" />
+    <ClInclude Include="..\Shared\utXML.h" />
     <ClInclude Include="HardwareManage\OGLBufferManager.h" />
     <ClInclude Include="HardwareManage\OGLOcclusionQuery.h" />
     <ClInclude Include="HardwareManage\OGLDeviceManager.h" />
@@ -107,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\utImage.cpp" />
+    <ClCompile Include="..\Shared\utOpenGL.cpp" />
     <ClCompile Include="HardwareManage\OGLBufferManager.cpp" />
     <ClCompile Include="HardwareManage\OGLOcclusionQuery.cpp" />
     <ClCompile Include="HardwareManage\OGLDeviceManager.cpp" />

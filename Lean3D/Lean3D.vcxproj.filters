@@ -18,6 +18,9 @@
     <Filter Include="SceneNodeManage">
       <UniqueIdentifier>{f92aebea-0baa-4b13-b9a2-db2a46279f53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shared">
+      <UniqueIdentifier>{2f201708-2ef0-456d-b1bb-f62c97a07378}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lean3D.h">
@@ -95,6 +98,30 @@
     <ClInclude Include="LeanRenderer.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="..\Shared\rapidxml.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\rapidxml_print.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utDebug.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utMath.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utOpenGL.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utplatform.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utTimer.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\utXML.h">
+      <Filter>shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LeanGPUTimer.cpp">
@@ -153,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="LeanRenderer.cpp">
       <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\utOpenGL.cpp">
+      <Filter>shared</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
