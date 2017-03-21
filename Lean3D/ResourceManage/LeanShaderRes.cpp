@@ -194,11 +194,11 @@ namespace Lean3D
 		
 	}
 
-	std::string ShaderResource::_vertPreamble = "#version 110 core\n";
-	std::string ShaderResource::_fragPreamble = "#version 110 core\n";
-	std::string ShaderResource::_geoPreamble = "#version 150 core\n";
-	std::string ShaderResource::_tescontPreamble = "#version 150 core\n";
-	std::string ShaderResource::_tesevalPreamble = "#version 150 core\n";
+	std::string ShaderResource::_vertPreamble = "\n";
+	std::string ShaderResource::_fragPreamble = "\n";
+	std::string ShaderResource::_geoPreamble = "\n";
+	std::string ShaderResource::_tescontPreamble = "\n";
+	std::string ShaderResource::_tesevalPreamble = "\n";
 	std::string ShaderResource::_tmpCode0 = "";
 	std::string ShaderResource::_tmpCode1 = "";
 	std::string ShaderResource::_tmpCode2 = "";
@@ -1336,7 +1336,7 @@ namespace Lean3D
 					attribute._name			= attribName;
 					attribute._location		= attribLocation;
 					attribute.setTypeByGLenum(attribType);
-					pass.attributes.emplace_back(attribute);
+					pass.attributes.push_back(attribute);
 				}
 			}
 		}
@@ -1376,7 +1376,7 @@ namespace Lean3D
 						sampler._name				= uniformName;
 						sampler._location			= uniformLocation;
 						sampler.setTypeByGLenum(uniformType);
-						pass.samplers.emplace_back(sampler);
+						pass.samplers.push_back(sampler);
 						
 					}
 					else

@@ -42,7 +42,7 @@ GLUSboolean init(GLUSvoid)
 	uint32 shaderResHandle = matres->getElemParamI(MaterialElemType::MaterialElem, 0, MaterialElemType::MatShaderI);
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
 	ShaderPass* sc = shaderRes->findPass("AMBIENT");
-	//geores->genGeomResVAO(sc->shaderHandle);
+	geores->genGeomResVAO(sc->shaderHandle);
 	int i = 0;
 	g_OGLDiv->clearColor(0.5f, 0.1f, 0.8f, 1.0f);
 

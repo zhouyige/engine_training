@@ -89,17 +89,7 @@ namespace Lean3D
 		};
 	};
 
-	enum class ShaderVariableType
-	{
-		NONE,
-		INT,
-		FLOAT,
-		FLOAT2,
-		FLOAT3,
-		FLOAT4,
-		FLOAT3x3,
-		FLOAT4x4
-	};
+
 	
 	//struct ShaderCombination
 	//{
@@ -118,6 +108,18 @@ namespace Lean3D
 	//	}
 	//};
 
+	enum class ShaderVariableType
+	{
+		NONE,
+		INT,
+		FLOAT,
+		FLOAT2,
+		FLOAT3,
+		FLOAT4,
+		FLOAT3x3,
+		FLOAT4x4
+	};
+
 	struct ShaderAttribute
 	{
 		friend class ShaderPass;
@@ -131,10 +133,10 @@ namespace Lean3D
 
 
 		ShaderAttribute();
-		ShaderAttribute(const ShaderAttribute& copy){}
-		~ShaderAttribute(){}
+		//ShaderAttribute(const ShaderAttribute& copy){}
+		~ShaderAttribute() {}
 
-		ShaderAttribute& operator=(const ShaderAttribute&){}
+		//ShaderAttribute& operator=(const ShaderAttribute&){}
 
 		std::string					_name;
 		GLint						_location;
@@ -160,7 +162,7 @@ namespace Lean3D
 		ShaderPass*								_pass;
 
 		ShaderSampler() :
-			_texUnit(-1), _sampState(0),_pass(0x0)
+			_texUnit(-1), _sampState(0), _pass(0x0)
 		{
 		}
 	};
@@ -175,13 +177,13 @@ namespace Lean3D
 		ShaderPass* getShaderPass() const;
 		void setTypeByGLenum(GLenum type);
 
-	//private:
+		//private:
 
 		ShaderUniform();
-		ShaderUniform(const ShaderUniform& copy){}
-		~ShaderUniform(){}
+		//ShaderUniform(const ShaderUniform& copy){}
+		~ShaderUniform() {}
 
-		ShaderUniform& operator=(const ShaderUniform&){}
+		//ShaderUniform& operator=(const ShaderUniform&){}
 
 		std::string					_name;
 		GLint						_location;
@@ -190,7 +192,7 @@ namespace Lean3D
 		float						_defValue[16]; // maybe a litter bit memory waste
 		ShaderPass*					_pass;
 	};
-	
+
 	struct ShaderPass
 	{
 		std::string                       id;
@@ -206,7 +208,7 @@ namespace Lean3D
 
 		// Shaders
 		//std::vector< ShaderCombination >  shaderCombs;
-		uint32									  shaderHandle;
+		uint32							  shaderHandle;
 		std::vector<ShaderUniform>		  uniforms;
 		std::vector<ShaderSampler>		  samplers;
 		std::vector<ShaderAttribute>	  attributes;
