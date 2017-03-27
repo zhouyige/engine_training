@@ -122,9 +122,6 @@
     <ClInclude Include="VertexLayoutBinding.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="LeanCamera.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="SceneManage\LeanSceneNode.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -135,6 +132,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="SceneManage\LeanGroupNode.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanCamera.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
@@ -202,9 +202,6 @@
     <ClCompile Include="VertexLayoutBinding.cpp">
       <Filter>SourceCode</Filter>
     </ClCompile>
-    <ClCompile Include="LeanCamera.cpp">
-      <Filter>SourceCode</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManage\LeanSceneNode.cpp">
       <Filter>SourceCode</Filter>
     </ClCompile>
@@ -215,6 +212,9 @@
       <Filter>SourceCode</Filter>
     </ClCompile>
     <ClCompile Include="SceneManage\LeanGroupNode.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanCamera.cpp">
       <Filter>SourceCode</Filter>
     </ClCompile>
   </ItemGroup>

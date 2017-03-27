@@ -1,5 +1,6 @@
 #pragma once
 #include "LeanSceneNode.h"
+#include <map>
 
 namespace Lean3D
 {
@@ -30,12 +31,12 @@ namespace Lean3D
 	class CameraNode : public SceneNode
 	{
 	public:
-		CameraNode();
+		CameraNode(const CameraNodeTpl &cameraTpl);
+		~CameraNode();
 
 		static SceneNodeTpl *parsingFunc(std::map< std::string, std::string > &attribs);
 		static SceneNode *factoryFunc(const SceneNodeTpl &nodeTpl);
 
-		~CameraNode();
 
 		int getParamI(int param);
 		void setParamI(int param, int value);

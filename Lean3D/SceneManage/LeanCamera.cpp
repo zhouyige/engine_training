@@ -4,15 +4,7 @@
 
 namespace Lean3D
 {
-	CameraNode::CameraNode()
-	{
-	}
-
-	CameraNode::~CameraNode()
-	{
-		// TODO
-	}
-
+	
 	SceneNodeTpl * CameraNode::parsingFunc(std::map<std::string, std::string>& attribs)
 	{
 		//bool result = true;
@@ -80,7 +72,28 @@ namespace Lean3D
 		return nullptr;
 	}
 
+	CameraNode::CameraNode(const CameraNodeTpl &cameraTpl)
+		: SceneNode(cameraTpl)
+	{
+	//	_pipelineRes = cameraTpl.pipeRes;
+//		_outputTex = cameraTpl.outputTex;
+		_outputBufferIndex = cameraTpl.outputBufferIndex;
+		_vpX = 0; _vpY = 0; _vpWidth = 320; _vpHeight = 240;
+		_frustLeft = cameraTpl.leftPlane;
+		_frustRight = cameraTpl.rightPlane;
+		_frustBottom = cameraTpl.bottomPlane;
+		_frustTop = cameraTpl.topPlane;
+		_frustNear = cameraTpl.nearPlane;
+		_frustFar = cameraTpl.farPlane;
+		_orthographic = cameraTpl.orthographic;
+		//_occSet = cameraTpl.occlusionCulling ? Modules::renderer().registerOccSet() : -1;
 
+	}
+
+	CameraNode::~CameraNode()
+	{
+		// TODO
+	}
 
 	int CameraNode::getParamI(int param)
 	{

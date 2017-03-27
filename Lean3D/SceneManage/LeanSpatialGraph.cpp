@@ -13,7 +13,7 @@ namespace Lean3D
 		if (!sceneNode._renderable && sceneNode._type != SceneNodeType::Light)
 			return;
 
-		if(!_freeList.empty())
+		if (!_freeList.empty())
 		{
 			uint32 index = _freeList.back();
 			ASSERT(_nodes[index] == nullptr);
@@ -46,9 +46,9 @@ namespace Lean3D
 	{
 	}
 
-	void SpatialGraph::updateQueues(const Frustum & frustum1, const Frustum * frustum2, 
-									RenderingOrder order, uint32 filterIgnore, 
-									bool lightQueue, bool renderQueue)
+	void SpatialGraph::updateQueues(const Frustum & frustum1, const Frustum * frustum2,
+		RenderingOrder order, uint32 filterIgnore,
+		bool lightQueue, bool renderQueue)
 	{
 		ASSERT(false);
 		//LeanRoot::sceneMana()  TODO**Modules::sceneMan().updateNodes(); 
@@ -65,7 +65,7 @@ namespace Lean3D
 
 		//culling
 
-		for(size_t i=0, s=_nodes.size(); i < s; ++i)
+		for (size_t i = 0, s = _nodes.size(); i < s; ++i)
 		{
 			SceneNode *node = _nodes[i];
 			if (node == nullptr || (node->_flags & filterIgnore)) continue;
@@ -98,19 +98,20 @@ namespace Lean3D
 
 					_renderQueue.push_back(RenderQueueItem(node->_type, sortKey, node));
 				}
+			}
+			else if (lightQueue && node->_type == SceneNodeType::Light)
+			{
+				_lightQueue.push_back(node);
+			}
 		}
-		else if (lightQueue && node->_type == SceneNodeType::Light)
-		{
-			_lightQueue.push_back(node);
-		}
-	}
 
-	// Sort
-	if (order != RenderingOrder::None)
-		std::sort(_renderQueue.begin(), _renderQueue.end(), 
-		[](const RenderQueueItem &a, const RenderQueueItem &b)
+		// Sort
+		if (order != RenderingOrder::None)
+			std::sort(_renderQueue.begin(), _renderQueue.end(),
+				[](const RenderQueueItem &a, const RenderQueueItem &b)
 		{
 			return a.sortKey < b.sortKey;
 		});
+	}
 }
 
