@@ -521,47 +521,47 @@ namespace Lean3D
 	void GeometryResource::genGeomResVAO(uint32 shaderHandle)
 	{
 		_vertAttribList.numAttribs = 8;
-		_vertAttribList.attribs[0].locationName = "a_vertPos";
+		_vertAttribList.attribs[0].locationName = "vertPos";
 		_vertAttribList.attribs[0].unitSize = 3;
 		_vertAttribList.attribs[0].vboHandle = _posVBOHandle;
 		_vertAttribList.attribs[0].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[1].locationName = "a_normal";
+		_vertAttribList.attribs[1].locationName = "normal";
 		_vertAttribList.attribs[1].unitSize = 3;
 		_vertAttribList.attribs[1].offset = 0;
 		_vertAttribList.attribs[1].stride = sizeof(VertexTanData);
 		_vertAttribList.attribs[1].vboHandle = _tanVBOHandle;
 		_vertAttribList.attribs[1].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[2].locationName = "a_tangent";
+		_vertAttribList.attribs[2].locationName = "tangent";
 		_vertAttribList.attribs[2].unitSize = 3;
 		_vertAttribList.attribs[2].offset = 3;
 		_vertAttribList.attribs[2].stride = sizeof(VertexTanData);
 		_vertAttribList.attribs[2].vboHandle = _tanVBOHandle;
 		_vertAttribList.attribs[2].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[3].locationName = "a_joint";
+		_vertAttribList.attribs[3].locationName = "joints";
 		_vertAttribList.attribs[3].unitSize = 4;
 		_vertAttribList.attribs[3].offset = 2;
 		_vertAttribList.attribs[3].stride = sizeof(VertexStaticData);
 		_vertAttribList.attribs[3].vboHandle = _tanVBOHandle;
 		_vertAttribList.attribs[3].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[4].locationName = "a_weight";
+		_vertAttribList.attribs[4].locationName = "weights";
 		_vertAttribList.attribs[4].unitSize = 4;
 		_vertAttribList.attribs[4].offset = 6;
 		_vertAttribList.attribs[4].stride = sizeof(VertexStaticData);
 		_vertAttribList.attribs[4].vboHandle = _staticVBOHandle;
 		_vertAttribList.attribs[4].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[5].locationName = "a_texCoord";
+		_vertAttribList.attribs[5].locationName = "texCoords0";
 		_vertAttribList.attribs[5].unitSize = 2;
 		_vertAttribList.attribs[5].offset = 0;
 		_vertAttribList.attribs[5].stride = sizeof(VertexStaticData);
 		_vertAttribList.attribs[5].vboHandle = _staticVBOHandle;
 		_vertAttribList.attribs[5].vboType = GL_ARRAY_BUFFER;
 
-		_vertAttribList.attribs[6].locationName = "a_texCoord1";
+		_vertAttribList.attribs[6].locationName = "texCoords1";
 		_vertAttribList.attribs[6].unitSize = 2;
 		_vertAttribList.attribs[6].offset = 10;
 		_vertAttribList.attribs[6].stride = sizeof(VertexStaticData);

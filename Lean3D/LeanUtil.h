@@ -356,4 +356,38 @@ namespace Lean3D
 	};
 
 
+	// scene
+
+	const int ROOTNODE = 1;
+
+	enum class SceneNodeType
+	{
+		Undefined = 0,
+		Group,
+		Model,
+		Mesh,
+		Joint,
+		Light,
+		Camera,
+		Emitter
+	};
+
+	struct SceneNodeFlags
+	{
+		enum List
+		{
+			NoDraw = 0x1,
+			NoCastShadow = 0x2,
+			NoRayQuery = 0x4,
+			Inactive = 0x7  // NoDraw | NoCastShadow | NoRayQuery
+		};
+	};
+
+	enum class RenderingOrder
+	{
+		None = 0,
+		FrontToBack,
+		BackToFront,
+		StateChanges
+	};
 }

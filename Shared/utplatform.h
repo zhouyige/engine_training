@@ -101,3 +101,7 @@ namespace StaticAssert
 //内存出错检测
 #define  LEAN_CHECK_MOMERY _ASSERTE(_CrtCheckMemory());
 #endif // _utPlatform_H_
+
+
+//
+#define  SAFE_DELETE(x) if(x){ delete x; x = nullptr;}

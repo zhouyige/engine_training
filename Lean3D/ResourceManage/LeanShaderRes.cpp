@@ -1399,7 +1399,7 @@ namespace Lean3D
 		//if ()
 	}
 
-	const char* ShaderUniform::getName() const
+	std::string ShaderUniform::getName() const
 	{
 		return _name.c_str();
 	}
@@ -1487,7 +1487,7 @@ namespace Lean3D
 		}
 	}
 
-	const char* ShaderAttribute::getName() const
+	std::string ShaderAttribute::getName() const
 	{
 		return _name.c_str();
 	}

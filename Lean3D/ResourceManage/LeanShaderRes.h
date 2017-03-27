@@ -125,7 +125,7 @@ namespace Lean3D
 		friend class ShaderPass;
 		friend class ShaderResource;
 	public:
-		const char* getName() const;
+		std::string getName() const;
 		const ShaderVariableType getType() const;
 		ShaderPass* getShaderPass() const;
 		void setTypeByGLenum(GLenum type);
@@ -167,12 +167,14 @@ namespace Lean3D
 		}
 	};
 
+
+
 	struct ShaderUniform
 	{
 		friend class ShaderPass;
 		friend class ShaderResource;
 	public:
-		const char* getName() const;
+		std::string getName() const;
 		const ShaderVariableType getType() const;
 		ShaderPass* getShaderPass() const;
 		void setTypeByGLenum(GLenum type);
@@ -189,6 +191,23 @@ namespace Lean3D
 		GLint						_location;
 		ShaderVariableType			_type;
 		unsigned int				_index;
+		union
+		{
+			/** @script{ignore} */
+			float floatValue;
+			/** @script{ignore} */
+			int intValue;
+			/** @script{ignore} */
+			float* floatPtrValue;
+			/** @script{ignore} */
+			int* intPtrValue;
+			///** @script{ignore} */
+			//const Texture::Sampler* samplerValue;
+			///** @script{ignore} */
+			//const Texture::Sampler** samplerArrayValue;
+			///** @script{ignore} */
+			//MethodBinding* method;
+		}_value;
 		float						_defValue[16]; // maybe a litter bit memory waste
 		ShaderPass*					_pass;
 	};
@@ -223,9 +242,43 @@ namespace Lean3D
 			, compiled(false)
 		{
 		}
+
+		void setUniformValue(std::string name, int value)
+		{
+			for(int i=0; i< uniforms.size(); ++i)
+			{
+				if (name == uniforms[i]._name)
+				{
+					uniforms[i]._value.intValue = value;
+				}
+			}
+		}
+		void setUniformValue(std::string name, float value)
+		{
+			for (int i = 0; i< uniforms.size(); ++i)
+			{
+				if (name == uniforms[i]._name)
+				{
+					uniforms[i]._value.floatValue = value;
+				}
+			}
+		}
+		void setUniformValue(std::string name, float value[2])
+		{
+			for (int i = 0; i< uniforms.size(); ++i)
+			{
+				if (name == uniforms[i]._name)
+				{
+					uniforms[i]._value.floatPtrValue = value;
+				}
+			}
+		}
+		void setUniformValue(std::string name, Vec3 value);
+		void setUniformValue(std::string name, Vec4 value);
+		//void setUniformValue(std::string name, Matrix3 value);
+		void setUniformValue(std::string name, Matrix4 value);
+		void setSampler(std::string name, TextureResource tex);
 	};
-
-
 
 	class ShaderResource : public Resource
 	{

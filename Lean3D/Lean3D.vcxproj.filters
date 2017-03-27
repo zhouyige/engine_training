@@ -65,9 +65,6 @@
     <ClInclude Include="ResourceManage\LeanMaterialRes.h">
       <Filter>ResourceManage</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceManage\LeanPipelineRes.h">
-      <Filter>ResourceManage</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceManage\LeanResource.h">
       <Filter>ResourceManage</Filter>
     </ClInclude>
@@ -122,6 +119,24 @@
     <ClInclude Include="..\Shared\utXML.h">
       <Filter>shared</Filter>
     </ClInclude>
+    <ClInclude Include="VertexLayoutBinding.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanCamera.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanSceneNode.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanSceneManager.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanSpatialGraph.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanGroupNode.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LeanGPUTimer.cpp">
@@ -154,9 +169,6 @@
     <ClCompile Include="ResourceManage\LeanMaterialRes.cpp">
       <Filter>ResourceManage</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManage\LeanPipelineRes.cpp">
-      <Filter>ResourceManage</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceManage\LeanResourceManager.cpp">
       <Filter>ResourceManage</Filter>
     </ClCompile>
@@ -187,5 +199,31 @@
     <ClCompile Include="LeanPrimitives.cpp">
       <Filter>SourceCode</Filter>
     </ClCompile>
+    <ClCompile Include="VertexLayoutBinding.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="LeanCamera.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanSceneNode.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanSceneManager.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanSpatialGraph.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanGroupNode.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ResourceManage\LeanPipelineRes.h">
+      <Filter>ResourceManage</Filter>
+    </None>
+    <None Include="ResourceManage\LeanPipelineRes.cpp">
+      <Filter>ResourceManage</Filter>
+    </None>
   </ItemGroup>
 </Project>

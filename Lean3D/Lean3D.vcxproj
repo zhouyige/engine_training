@@ -54,7 +54,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..\Shared;..\Dependencies;..\HardwareManage;$(ProjectDir);..\ResourceManage;HardwareManage;ResourceManage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shared;..\Dependencies;..\HardwareManage;..\ResourceManage;..\SceneManage;HardwareManage;ResourceManage;SceneManage;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -97,21 +97,27 @@
     <ClInclude Include="Lean3D.h" />
     <ClInclude Include="Lean3DRoot.h" />
     <ClInclude Include="Lean3Dvector.h" />
+    <ClInclude Include="LeanCamera.h" />
     <ClInclude Include="LeanGPUTimer.h" />
+    <ClInclude Include="SceneManage\LeanGroupNode.h" />
     <ClInclude Include="LeanPrerequisites.h" />
     <ClInclude Include="LeanPrimitives.h" />
     <ClInclude Include="LeanRenderer.h" />
+    <ClInclude Include="SceneManage\LeanSpatialGraph.h" />
+    <ClInclude Include="SceneManage\LeanSceneManager.h" />
+    <ClInclude Include="SceneManage\LeanSceneNode.h" />
     <ClInclude Include="LeanTimer.h" />
     <ClInclude Include="LeanUtil.h" />
     <ClInclude Include="ResourceManage\LeanAnimationRes.h" />
     <ClInclude Include="ResourceManage\LeanGeometryRes.h" />
     <ClInclude Include="ResourceManage\LeanMaterialRes.h" />
-    <ClInclude Include="ResourceManage\LeanPipelineRes.h" />
+    <None Include="ResourceManage\LeanPipelineRes.h" />
     <ClInclude Include="ResourceManage\LeanResource.h" />
     <ClInclude Include="ResourceManage\LeanResourceManager.h" />
     <ClInclude Include="ResourceManage\LeanSceneGraphRes.h" />
     <ClInclude Include="ResourceManage\LeanShaderRes.h" />
     <ClInclude Include="ResourceManage\LeanTextureRes.h" />
+    <ClInclude Include="VertexLayoutBinding.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\utImage.cpp" />
@@ -123,18 +129,24 @@
     <ClCompile Include="HardwareManage\OGLShaderManager.cpp" />
     <ClCompile Include="HardwareManage\OGLTextureManager.cpp" />
     <ClCompile Include="Lean3DRoot.cpp" />
+    <ClCompile Include="LeanCamera.cpp" />
     <ClCompile Include="LeanGPUTimer.cpp" />
+    <ClCompile Include="SceneManage\LeanGroupNode.cpp" />
     <ClCompile Include="LeanPrimitives.cpp" />
     <ClCompile Include="LeanRenderer.cpp" />
+    <ClCompile Include="SceneManage\LeanSpatialGraph.cpp" />
+    <ClCompile Include="SceneManage\LeanSceneManager.cpp" />
+    <ClCompile Include="SceneManage\LeanSceneNode.cpp" />
     <ClCompile Include="ResourceManage\LeanAnimationRes.cpp" />
     <ClCompile Include="ResourceManage\LeanGeometryRes.cpp" />
     <ClCompile Include="ResourceManage\LeanMaterialRes.cpp" />
-    <ClCompile Include="ResourceManage\LeanPipelineRes.cpp" />
+    <None Include="ResourceManage\LeanPipelineRes.cpp" />
     <ClCompile Include="ResourceManage\LeanResource.cpp" />
     <ClCompile Include="ResourceManage\LeanResourceManager.cpp" />
     <ClCompile Include="ResourceManage\LeanSceneGraphRes.cpp" />
     <ClCompile Include="ResourceManage\LeanShaderRes.cpp" />
     <ClCompile Include="ResourceManage\LeanTextureRes.cpp" />
+    <ClCompile Include="VertexLayoutBinding.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

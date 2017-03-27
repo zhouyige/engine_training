@@ -43,10 +43,10 @@ namespace Lean3D {
 
 	struct OverlayBatch
 	{
-		PMaterialResource  materialRes;
-		uint32             firstVert, vertCount;
-		float              colRGBA[4];
-		int                flags;
+		ReferenceCountPtr<MaterialResource>  materialRes;
+		uint32								 firstVert, vertCount;
+		float								 colRGBA[4];
+		int									 flags;
 
 		OverlayBatch() {}
 
@@ -81,11 +81,11 @@ namespace Lean3D {
 
 	struct OccProxy
 	{
-		Vec3f   bbMin, bbMax;
+		Vec3   bbMin, bbMax;
 		uint32  queryObj;
 
 		OccProxy() {}
-		OccProxy(const Vec3f &bbMin, const Vec3f &bbMax, uint32 queryObj) :
+		OccProxy(const Vec3 &bbMin, const Vec3 &bbMax, uint32 queryObj) :
 			bbMin(bbMin), bbMax(bbMax), queryObj(queryObj)
 		{
 		}
@@ -112,13 +112,13 @@ namespace Lean3D {
 		bool init();
 		void initStates();
 
-		void drawAABB(const Vec3f &bbMin, const Vec3f &bbMax);
-		void drawSphere(const Vec3f &pos, float radius);
-		void drawCone(float height, float fov, const Matrix4f &transMat);
+		void drawAABB(const Vec3 &bbMin, const Vec3 &bbMax);
+		void drawSphere(const Vec3 &pos, float radius);
+		void drawCone(float height, float fov, const Matrix4 &transMat);
 
-		bool createShaderComb(const char *vertexShader, const char *fragmentShader, ShaderCombination &sc);
-		void releaseShaderComb(ShaderCombination &sc);
-		void setShaderComb(ShaderCombination *sc);
+		bool createShaderComb(const char *vertexShader, const char *fragmentShader, ShaderPass &pass);
+		void releaseShaderComb(ShaderPass &pass);
+		void setShaderComb(ShaderPass *pass);
 		void commitGeneralUniforms();
 		bool setMaterial(MaterialResource *materialRes, const std::string &shaderContext);
 
@@ -128,7 +128,7 @@ namespace Lean3D {
 		int registerOccSet();
 		void unregisterOccSet(int occSet);
 		void drawOccProxies(uint32 list);
-		void pushOccProxy(uint32 list, const Vec3f &bbMin, const Vec3f &bbMax, uint32 queryObj)
+		void pushOccProxy(uint32 list, const Vec3 &bbMin, const Vec3 &bbMax, uint32 queryObj)
 		{
 			_occProxies[list].push_back(OccProxy(bbMin, bbMax, queryObj));
 		}
@@ -139,27 +139,27 @@ namespace Lean3D {
 
 		static void drawMeshes(uint32 firstItem, uint32 lastItem, const std::string &shaderContext, const std::string &theClass,
 			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);
-		static void drawParticles(uint32 firstItem, uint32 lastItem, const std::string &shaderContext, const std::string &theClass,
-			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);
+		/*static void drawParticles(uint32 firstItem, uint32 lastItem, const std::string &shaderContext, const std::string &theClass,
+			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);*/
 
 		void render(CameraNode *camNode);
 		void finalizeFrame();
 
 		uint32 getFrameID() { return _frameID; }
-		ShaderCombination *getCurShader() { return _curShader; }
+		ShaderPass *getCurShader() { return _curShader; }
 		CameraNode *getCurCamera() { return _curCamera; }
 		uint32 getQuadIdxBuf() { return _quadIdxBuf; }
 		uint32 getParticleVBO() { return _particleVBO; }
 
 	protected:
-		void setupViewMatrices(const Matrix4f &viewMat, const Matrix4f &projMat);
+		void setupViewMatrices(const Matrix4 &viewMat, const Matrix4 &projMat);
 
 		void createPrimitives();
 
 		bool setMaterialRec(MaterialResource *materialRes, const std::string &shaderContext, ShaderResource *shaderRes);
 
 		void setupShadowMap(bool noShadows);
-		Matrix4f calcCropMatrix(const Frustum &frustSlice, const Vec3f lightPos, const Matrix4f &lightViewProjMat);
+		Matrix4 calcCropMatrix(const Frustum &frustSlice, const Vec3 lightPos, const Matrix4 &lightViewProjMat);
 		void updateShadowMap();
 
 		void drawOverlays(const std::string &shaderContext);
@@ -185,7 +185,7 @@ namespace Lean3D {
 		unsigned char                      *_scratchBuf;
 		uint32                             _scratchBufSize;
 
-		Matrix4f                           _viewMat, _viewMatInv, _projMat, _viewProjMat, _viewProjMatInv;
+		Matrix4                           _viewMat, _viewMatInv, _projMat, _viewProjMat, _viewProjMatInv;
 
 		std::vector< PipeSamplerBinding >  _pipeSamplerBindings;
 		std::vector< char >                _occSets;  // Actually bool
@@ -203,17 +203,17 @@ namespace Lean3D {
 		MaterialResource                   *_curStageMatLink;
 		CameraNode                         *_curCamera;
 		LightNode                          *_curLight;
-		ShaderCombination                  *_curShader;
+		ShaderPass						   *_curShader;
 		RenderTarget                       *_curRenderTarget;
 		uint32                             _curShaderUpdateStamp;
 
 		uint32                             _maxAnisoMask;
 		float                              _smSize;
 		float                              _splitPlanes[5];
-		Matrix4f                           _lightMats[4];
+		Matrix4                            _lightMats[4];
 
 		uint32                             _vlPosOnly, _vlOverlay, _vlModel, _vlParticle;
-		ShaderCombination                  _defColorShader;
+		ShaderPass		                   _defColorShader;
 		int                                _defColShader_color;  // Uniform location
 
 		uint32                             _vbCube, _ibCube, _vbSphere, _ibSphere;

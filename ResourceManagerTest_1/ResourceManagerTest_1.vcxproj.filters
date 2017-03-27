@@ -39,9 +39,6 @@
     <ClInclude Include="..\Lean3D\ResourceManage\LeanMaterialRes.h">
       <Filter>LeanResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Lean3D\ResourceManage\LeanPipelineRes.h">
-      <Filter>LeanResourceManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Lean3D\ResourceManage\LeanResource.h">
       <Filter>LeanResourceManager</Filter>
     </ClInclude>
@@ -134,9 +131,6 @@
     <ClCompile Include="..\Lean3D\ResourceManage\LeanMaterialRes.cpp">
       <Filter>LeanResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Lean3D\ResourceManage\LeanPipelineRes.cpp">
-      <Filter>LeanResourceManager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Lean3D\ResourceManage\LeanResource.cpp">
       <Filter>LeanResourceManager</Filter>
     </ClCompile>
@@ -185,5 +179,13 @@
     <ClCompile Include="..\Lean3D\ResourceManage\LeanSceneGraphRes.cpp">
       <Filter>LeanResourceManager</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Lean3D\ResourceManage\LeanPipelineRes.h">
+      <Filter>LeanResourceManager</Filter>
+    </None>
+    <None Include="..\Lean3D\ResourceManage\LeanPipelineRes.cpp">
+      <Filter>LeanResourceManager</Filter>
+    </None>
   </ItemGroup>
 </Project>

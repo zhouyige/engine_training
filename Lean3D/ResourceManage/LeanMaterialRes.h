@@ -83,11 +83,11 @@ namespace Lean3D
 
 	private:
 		ReferenceCountPtr<ShaderResource>     _shaderRes;
-		uint32                      _combMask;
-		std::string                 _class;
-		std::vector< MatSampler >   _samplers;
-		std::vector< MatUniform >   _uniforms;
-		std::vector< std::string >  _shaderFlags;
+		//uint32							  _combMask;
+		std::string							  _class;
+		std::vector< ShaderSampler >		  _samplers;
+		std::vector< ShaderUniform >		  _uniforms;
+		std::vector< std::string >			  _shaderFlags;
 		ReferenceCountPtr<MaterialResource>   _matLink;
 
 		friend class ResourceManager;

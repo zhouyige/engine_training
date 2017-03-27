@@ -49,12 +49,12 @@ GLUSboolean init(GLUSvoid)
 
 	return GLUS_TRUE;
 }
-
+GLfloat projectionMatrix[16];
 GLUSvoid reshape(GLUSint width, GLUSint height)
 {
 
 	g_OGLDiv->setViewport(0, 0, width, height);
-	GLfloat projectionMatrix[16];
+	
 	glusMatrix4x4Perspectivef(projectionMatrix, 40.0f, (GLfloat)width / (GLfloat)height, 1.0f, 100.0f);
 	uint32 shaderResHandle = matres->getElemParamI(MaterialElemType::MaterialElem, 0, MaterialElemType::MatShaderI);
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
@@ -69,6 +69,7 @@ GLUSvoid reshape(GLUSint width, GLUSint height)
 	}
 	g_OGLDiv->shaderManaRef()->setShaderUniform(location, UNIFORM_FLOAT44, projectionMatrix);
 	
+
 }
 bool setMaterialRes(MaterialResource *matrialRes, const string &shaderContext, ShaderResource *shaderRes)
 {
@@ -105,6 +106,24 @@ GLUSboolean update(GLUSfloat time)
 	ShaderResource* shaderRes = (ShaderResource*)LeanRoot::resMana().resolveResHandle(shaderResHandle);
 	ShaderPass* sc = shaderRes->findPass("AMBIENT");
 	g_OGLDiv->shaderManaRef()->setCurrentShader(sc->shaderHandle);
+	GLint location = 0;
+	for (int i = 0; i < sc->uniforms.size(); ++i)
+	{
+		if (sc->uniforms[i].getName() == "viewProjMat")
+		{
+			location = sc->uniforms[i]._location;
+		}
+	}
+	g_OGLDiv->shaderManaRef()->setShaderUniform(location, UNIFORM_FLOAT44, projectionMatrix);
+	for (int i = 0; i < sc->uniforms.size(); ++i)
+	{
+		if (sc->uniforms[i].getName() == "worldMat")
+		{
+			location = sc->uniforms[i]._location;
+		}
+	}
+	Matrix4 worldmat = Matrix4();
+	g_OGLDiv->shaderManaRef()->setShaderUniform(location, UNIFORM_FLOAT44, worldmat.c);
 	//g_OGLDiv->shaderManaRef()->setShaderSampler(sc->shaderCombs[0].)
 	g_OGLDiv->drawIndexed(GL_TRIANGLES, geores->getIndexCount(), GL_UNSIGNED_SHORT);
 	return GLUS_TRUE;

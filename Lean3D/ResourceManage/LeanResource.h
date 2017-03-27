@@ -38,12 +38,15 @@ namespace Lean3D
 	{
 	public:
 		Resource( int type , const std::string &name, int flag );
-		~Resource();
+		virtual ~Resource();
 
 		virtual Resource *clone();
 
+		//this two function should not be virtual
+		//design problem
 		virtual void initDefault();
 		virtual void release();
+
 		virtual bool load(const char *data, int size);
 		void unload();
 

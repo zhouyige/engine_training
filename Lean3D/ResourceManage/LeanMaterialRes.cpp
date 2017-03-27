@@ -27,7 +27,7 @@ namespace Lean3D
 	void MaterialResource::initDefault()
 	{
 		_shaderRes = 0x0;
-		_combMask = 0;
+//		_combMask = 0;
 		_matLink = 0x0;
 		_class = "";
 	}
@@ -37,7 +37,7 @@ namespace Lean3D
 		_shaderRes = 0x0;
 		_matLink = 0x0;
 		for (uint32 i = 0; i < _samplers.size(); ++i)
-			_samplers[i].texRes = 0x0;
+			_samplers[i]._defTex = 0x0;
 		_samplers.clear();
 		_uniforms.clear();
 		_shaderFlags.clear();
@@ -122,8 +122,8 @@ namespace Lean3D
 				LEAN_DEGUG_LOG("error 未定义纹理资源路径！", 0);
 				return false;
 			}
-			MatSampler sampler;
-			sampler.name = node1.getAttribute("name");
+			ShaderSampler sampler;
+			sampler._name = node1.getAttribute("name");
 
 			ResHandle texMap;
 			uint32 flags = 0;
@@ -145,7 +145,7 @@ namespace Lean3D
 			texMap = LeanRoot::resMana().addResource(ResourceTypes::Texture
 				, std::string(node1.getAttribute("map"))
 				, flags, false);
-			sampler.texRes = (TextureResource*)LeanRoot::resMana().resolveResHandle(texMap);
+			sampler._defTex = (TextureResource*)LeanRoot::resMana().resolveResHandle(texMap);
 			_samplers.push_back(sampler);
 			node1 = node1.getNextSibling("Sampler");
 		}
@@ -160,12 +160,12 @@ namespace Lean3D
 				return false;
 			}
 
-			MatUniform uniform;
-			uniform.name = node1.getAttribute("name");
-			uniform.values[0] = (float)atof(node1.getAttribute("a", "0"));
-			uniform.values[1] = (float)atof(node1.getAttribute("b", "0"));
-			uniform.values[2] = (float)atof(node1.getAttribute("c", "0"));
-			uniform.values[3] = (float)atof(node1.getAttribute("d", "0"));
+			ShaderUniform uniform;
+			uniform._name = node1.getAttribute("name");
+			uniform._defValue[0] = (float)atof(node1.getAttribute("a", "0"));
+			uniform._defValue[1] = (float)atof(node1.getAttribute("b", "0"));
+			uniform._defValue[2] = (float)atof(node1.getAttribute("c", "0"));
+			uniform._defValue[3] = (float)atof(node1.getAttribute("d", "0"));
 
 			_uniforms.push_back(uniform);
 			node1 = node1.getNextSibling("Uniform");
@@ -178,12 +178,12 @@ namespace Lean3D
 	{
 		for (uint32 i = 0; i < _uniforms.size(); ++i)
 		{
-			if (_uniforms[i].name == name)
+			if (_uniforms[i].getName() == name)
 			{
-				_uniforms[i].values[0] = a;
-				_uniforms[i].values[1] = b;
-				_uniforms[i].values[2] = c;
-				_uniforms[i].values[3] = d;
+				_uniforms[i]._defValue[0] = a;
+				_uniforms[i]._defValue[1] = b;
+				_uniforms[i]._defValue[2] = c;
+				_uniforms[i]._defValue[3] = d;
 				return true;
 			}
 		}
@@ -256,7 +256,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case  MaterialElemType::SampTexResI:
-					return _samplers[elemIdx].texRes->getHandle();
+					return _samplers[elemIdx]._defTex->getHandle();
 				}
 			}
 			break;
@@ -319,7 +319,7 @@ namespace Lean3D
 				case MaterialElemType::SampTexResI:
 					Resource *res = LeanRoot::resMana().resolveResHandle(value);
 					if (res != 0x0 && res->getType() == ResourceTypes::Texture)
-						_samplers[elemIdx].texRes = (TextureResource *)res;
+						_samplers[elemIdx]._defTex = (TextureResource *)res;
 					else
 					{
 						LEAN_DEGUG_LOG("error 设置材质sampler读取res出错！", 0);
@@ -345,7 +345,7 @@ namespace Lean3D
 				{
 				case MaterialElemType::UnifValueF4:
 					if ((unsigned)compIdx < 4) 
-						return _uniforms[elemIdx].values[compIdx];
+						return _uniforms[elemIdx]._defValue[compIdx];
 					break;
 				}
 			}
@@ -367,7 +367,7 @@ namespace Lean3D
 				case MaterialElemType::UnifValueF4:
 					if ((unsigned)compIdx < 4)
 					{
-						_uniforms[elemIdx].values[compIdx] = value;
+						_uniforms[elemIdx]._defValue[compIdx] = value;
 						return;
 					}
 					break;
@@ -396,7 +396,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case MaterialElemType::SampNameStr:
-					return _samplers[elemIdx].name.c_str();
+					return _samplers[elemIdx]._name.c_str();
 				}
 			}
 			break;
@@ -406,7 +406,7 @@ namespace Lean3D
 				switch (param)
 				{
 				case MaterialElemType::UnifNameStr:
-					return _uniforms[elemIdx].name.c_str();
+					return _uniforms[elemIdx]._name.c_str();
 				}
 			}
 			break;

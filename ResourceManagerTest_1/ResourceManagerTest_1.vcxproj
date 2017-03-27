@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Shared;..\Dependencies;..\Lean3D;..\Lean3D\HardwareManage;..\Lean3D\ResourceManage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shared;..\Dependencies;..\Lean3D;..\Lean3D\HardwareManage;..\Lean3D\ResourceManage;SceneManage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,7 +167,7 @@
     <ClInclude Include="..\Lean3D\ResourceManage\LeanAnimationRes.h" />
     <ClInclude Include="..\Lean3D\ResourceManage\LeanGeometryRes.h" />
     <ClInclude Include="..\Lean3D\ResourceManage\LeanMaterialRes.h" />
-    <ClInclude Include="..\Lean3D\ResourceManage\LeanPipelineRes.h" />
+    <None Include="..\Lean3D\ResourceManage\LeanPipelineRes.h" />
     <ClInclude Include="..\Lean3D\ResourceManage\LeanResource.h" />
     <ClInclude Include="..\Lean3D\ResourceManage\LeanResourceManager.h" />
     <ClInclude Include="..\Lean3D\ResourceManage\LeanSceneGraphRes.h" />
@@ -197,7 +197,7 @@
     <ClCompile Include="..\Lean3D\ResourceManage\LeanAnimationRes.cpp" />
     <ClCompile Include="..\Lean3D\ResourceManage\LeanGeometryRes.cpp" />
     <ClCompile Include="..\Lean3D\ResourceManage\LeanMaterialRes.cpp" />
-    <ClCompile Include="..\Lean3D\ResourceManage\LeanPipelineRes.cpp" />
+    <None Include="..\Lean3D\ResourceManage\LeanPipelineRes.cpp" />
     <ClCompile Include="..\Lean3D\ResourceManage\LeanResource.cpp" />
     <ClCompile Include="..\Lean3D\ResourceManage\LeanResourceManager.cpp" />
     <ClCompile Include="..\Lean3D\ResourceManage\LeanSceneGraphRes.cpp" />

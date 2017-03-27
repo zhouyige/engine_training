@@ -20,6 +20,7 @@ namespace Lean3D
 
 		static OGLDeviceManager &oglDMRef() { return *_oglDM; }
 		static ResourceManager &resMana() { return *_resourceManager; }
+		static SceneManager	   &sceneMana() { return *_sceneManager; }
 
 		//
 		//2016/05/19 add by zhou
@@ -39,7 +40,7 @@ namespace Lean3D
 	private:
 		static OGLDeviceManager           *_oglDM;
 		static ResourceManager			  *_resourceManager;
-	
+		static SceneManager				  *_sceneManager;
 		//
 		//2016/05/19 add by zhou
 		static std::map< int, std::string >  _resourcePaths;

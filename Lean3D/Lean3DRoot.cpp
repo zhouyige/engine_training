@@ -6,8 +6,9 @@
 #include "LeanMaterialRes.h"
 #include "LeanShaderRes.h"
 #include "LeanTextureRes.h"
-#include "LeanSceneGraphRes.h"
 
+#include "SceneManage/LeanSceneManager.h"
+#include "LeanSceneGraphRes.h"
 #include <vector>
 #include <fstream>
 #include <ios>
@@ -18,6 +19,7 @@ namespace Lean3D
 	OGLDeviceManager *g_OGLDiv = 0x0;
 	OGLDeviceManager *LeanRoot::_oglDM = 0x0;
 	ResourceManager  *LeanRoot::_resourceManager = 0x0;
+	SceneManager     *LeanRoot::_sceneManager = 0x0;
 	std::map<int, std::string> LeanRoot::_resourcePaths;
 
 	bool LeanRoot::init()
@@ -84,6 +86,11 @@ namespace Lean3D
 		
 		//
 		_resourcePaths.clear();
+
+		// just for test
+		ASSERT(false);
+		_sceneManager = new SceneManager();
+		//
 		return false;
 	}
 
@@ -221,7 +228,7 @@ namespace Lean3D
 			return false;
 		}
 		
-		LEAN_DEGUG_LOG("hint 读取资源：%d.", res->getName().c_str());
+		LEAN_DEGUG_LOG("hint 读取资源：%s.", res->getName().c_str());
 		
 		return res->load(data, size);
 	}
