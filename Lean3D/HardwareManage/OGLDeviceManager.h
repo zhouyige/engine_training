@@ -176,7 +176,8 @@ namespace Lean3D
 			{
 			_newVertLayout = vlObj;
 			}*/
-		inline  void setVAO(uint32 vaoHandle) { _bufManager->setCurrentVAO(vaoHandle); }
+		inline  void setVAO(uint32 vaoHandle) const
+		{ _bufManager->setCurrentVAO(vaoHandle); }
 		inline void setTexture(uint32 activeUnit, uint32 texHandle, uint16 samplerState)
 		{
 			_texManager->addActiveTexture(activeUnit, texHandle, samplerState);
@@ -187,7 +188,7 @@ namespace Lean3D
 		{
 			_newRasterState.renderTargetWriteMask = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getColorWriteMask(bool &enabled)
+		inline void getColorWriteMask(bool &enabled) const
 		{
 			enabled = _newRasterState.renderTargetWriteMask;
 		}
@@ -195,23 +196,23 @@ namespace Lean3D
 		{
 			_newRasterState.fillMode = fillMode; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getFillMode(OGLFillMode &fillMode)
+		inline void getFillMode(OGLFillMode &fillMode) const
 		{
-			fillMode = (OGLFillMode)_newRasterState.fillMode;
+			fillMode = static_cast<OGLFillMode>(_newRasterState.fillMode);
 		}
 		inline void setCullMode(OGLCullMode cullMode)
 		{
 			_newRasterState.cullMode = cullMode; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getCullMode(OGLCullMode &cullMode)
+		inline void getCullMode(OGLCullMode &cullMode) const
 		{
-			cullMode = (OGLCullMode)_newRasterState.cullMode;
+			cullMode = static_cast<OGLCullMode>(_newRasterState.cullMode);
 		}
 		inline void setScissorTest(bool enabled)
 		{
 			_newRasterState.scissorEnable = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getScissorTest(bool &enabled)
+		inline void getScissorTest(bool &enabled) const
 		{
 			enabled = _newRasterState.scissorEnable;
 		}
@@ -219,7 +220,7 @@ namespace Lean3D
 		{
 			_newRasterState.multisampleEnable = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getMulisampling(bool &enabled)
+		inline void getMulisampling(bool &enabled) const
 		{
 			enabled = _newRasterState.multisampleEnable;
 		}
@@ -227,7 +228,7 @@ namespace Lean3D
 		{
 			_newBlendState.alphaToCoverageEnable = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getAlphaToCoverage(bool &enabled)
+		inline void getAlphaToCoverage(bool &enabled) const
 		{
 			enabled = _newBlendState.alphaToCoverageEnable;
 		}
@@ -236,16 +237,16 @@ namespace Lean3D
 			_newBlendState.blendEnable = enabled; _newBlendState.srcBlendFunc = srcBlendFunc;
 			_newBlendState.destBlendFunc = destBlendFunc; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getBlendMode(bool &enabled, OGLBlendFunc &srcBlendFunc, OGLBlendFunc &destBlendFunc)
+		inline void getBlendMode(bool &enabled, OGLBlendFunc &srcBlendFunc, OGLBlendFunc &destBlendFunc) const
 		{
-			enabled = _newBlendState.blendEnable; srcBlendFunc = (OGLBlendFunc)_newBlendState.srcBlendFunc;
-			destBlendFunc = (OGLBlendFunc)_newBlendState.destBlendFunc;
+			enabled = _newBlendState.blendEnable; srcBlendFunc = static_cast<OGLBlendFunc>(_newBlendState.srcBlendFunc);
+			destBlendFunc = static_cast<OGLBlendFunc>(_newBlendState.destBlendFunc);
 		}
 		inline void setDepthMask(bool enabled)
 		{
 			_newDepthStencilState.depthWriteMask = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getDepthMask(bool &enabled)
+		inline void getDepthMask(bool &enabled) const
 		{
 			enabled = _newDepthStencilState.depthWriteMask;
 		}
@@ -253,7 +254,7 @@ namespace Lean3D
 		{
 			_newDepthStencilState.depthEnable = enabled; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getDepthTest(bool &enabled)
+		inline void getDepthTest(bool &enabled) const
 		{
 			enabled = _newDepthStencilState.depthEnable;
 		}
@@ -261,16 +262,16 @@ namespace Lean3D
 		{
 			_newDepthStencilState.depthFunc = depthFunc; _pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getDepthFunc(OGLDepthFunc &depthFunc)
+		inline void getDepthFunc(OGLDepthFunc &depthFunc) const
 		{
-			depthFunc = (OGLDepthFunc)_newDepthStencilState.depthFunc;
+			depthFunc = static_cast<OGLDepthFunc>(_newDepthStencilState.depthFunc);
 		}
 		inline void setStencilTest(bool enabled)
 		{
 			_newStencilState.StencilEnable = enabled;
 			_pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getStencilTest(bool &enabled)
+		inline void getStencilTest(bool &enabled) const
 		{
 			enabled = _newStencilState.StencilEnable;
 		}
@@ -280,7 +281,7 @@ namespace Lean3D
 			_newStencilState.StencilMask = mask;
 			_pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getStencilMask(bool &enabled, uint32 &mask)
+		inline void getStencilMask(bool &enabled, uint32 &mask) const
 		{
 			enabled = _newStencilState.MaskEnable;
 			mask = _newStencilState.StencilMask;
@@ -293,7 +294,7 @@ namespace Lean3D
 			_newStencilState.FuncMask = mask;
 			_pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getStencilFunc(bool &enabled, OGLStencilFunc &func, int &refvalue, uint32 &mask)
+		inline void getStencilFunc(bool &enabled, OGLStencilFunc &func, int &refvalue, uint32 &mask) const
 		{
 			enabled = _newStencilState.FuncEnable;
 			func = _newStencilState.StencilFunc;
@@ -308,7 +309,7 @@ namespace Lean3D
 			_newStencilState.DepthPass = dppass;
 			_pendingMask |= PM_RENDERSTATES;
 		}
-		inline void getStencilOp(bool &enabled, OGLStencilOp &sfail, OGLStencilOp &dpfial, OGLStencilOp &dppass)
+		inline void getStencilOp(bool &enabled, OGLStencilOp &sfail, OGLStencilOp &dpfial, OGLStencilOp &dppass) const
 		{
 			enabled = _newStencilState.StencilOp;
 			sfail = _newStencilState.StencilFail;
@@ -325,11 +326,16 @@ namespace Lean3D
 		void clearStencil(GLint s);
 		void clear(GLbitfield mask);
 
-		inline OGLBufferManager *buffManaRef() { return _bufManager; }
-		inline OGLTextureManager *texManaRef() { return _texManager; }
-		inline OGLRenderBufferManager *rendbufManaRef() { return _rendbufManager; }
-		inline OGLShaderManager *shaderManaRef() { return _shaderManager; }
-		inline OGLOcclusionQuery *oclQueryRef() { return _oclManager; }
+		inline OGLBufferManager *buffManaRef() const
+		{ return _bufManager; }
+		inline OGLTextureManager *texManaRef() const
+		{ return _texManager; }
+		inline OGLRenderBufferManager *rendbufManaRef() const
+		{ return _rendbufManager; }
+		inline OGLShaderManager *shaderManaRef() const
+		{ return _shaderManager; }
+		inline OGLOcclusionQuery *oclQueryRef() const
+		{ return _oclManager; }
 
 		//纹理临时内存一次创建，避免临时纹理内存还要申请删除内存
 		unsigned char *useScrathBuf(uint32 minSize);
