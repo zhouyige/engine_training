@@ -1,0 +1,74 @@
+<Model name="Spider" geometry="Spider.geo">
+	<Joint name="Body.003" tx="-1.52724e-07" ty="41.0054" tz="0.769218" rx="21.8014" ry="180" rz="-59.9844" sx="20" sy="20" sz="20" jointIndex="1">
+		<Joint name="Body.002" tx="-0.853804" ty="0.493255" tz="-0.227464" rx="10.7068" ry="160.896" rz="-131.57" sx="1" sy="1" sz="1" jointIndex="2">
+			<Joint name="Body" tx="0.938361" ty="-0.345647" tz="-0.795572" rx="0.000114502" ry="-180" rz="-69.7785" jointIndex="3">
+				<Joint name="Body2" tx="7.72793e-07" ty="-0.100004" tz="-1.8" rx="-7.47051e-05" ry="-6.43403e-05" rz="-4.61038e-05" jointIndex="4" />
+				<Joint name="v_B1_L" tx="0.580955" ty="-0.29662" tz="-0.496197" rx="16.6659" ry="-141.046" rz="13.4832" jointIndex="5">
+					<Joint name="v_B2_L" tx="-2.98023e-08" ty="0" tz="-1.59353" rx="-32.8331" ry="-13.5235" rz="-12.1007" jointIndex="6">
+						<Joint name="v_B3_L" tx="-5.96046e-08" ty="5.96046e-08" tz="-1.8424" rx="-29.5447" ry="-28.2731" rz="3.19064" jointIndex="7" />
+					</Joint>
+				</Joint>
+				<Joint name="v2_B1_L" tx="0.589574" ty="-0.355596" tz="-0.832684" rx="20.6884" ry="-105.377" rz="47.5163" jointIndex="8">
+					<Joint name="v2_B2_L" tx="8.9407e-08" ty="0" tz="-1.46889" rx="-38.9962" ry="18.2841" rz="-82.0206" jointIndex="9">
+						<Joint name="v2_B3_L" tx="-3.57628e-07" ty="1.78814e-07" tz="-2.04818" rx="-30.1012" ry="-26.445" rz="-11.576" jointIndex="10" />
+					</Joint>
+				</Joint>
+				<Joint name="v3_B1_L" tx="0.589575" ty="-0.355597" tz="-1.15222" rx="17.1672" ry="-79.7025" rz="-54.6251" jointIndex="11">
+					<Joint name="v3_B2_L" tx="5.96046e-08" ty="2.98023e-08" tz="-1.3554" rx="-25.1645" ry="-25.1898" rz="106.871" jointIndex="12">
+						<Joint name="v3_B3_L" tx="-1.19209e-07" ty="8.9407e-08" tz="-1.82055" rx="-11.6474" ry="33.136" rz="5.43693" jointIndex="13" />
+					</Joint>
+				</Joint>
+				<Joint name="v4_B1_L" tx="0.564328" ty="-0.33554" tz="-1.48304" rx="11.3352" ry="-44.1703" rz="-10.81" jointIndex="14">
+					<Joint name="v4_B2_L" tx="-1.63913e-07" ty="-2.98023e-08" tz="-1.62559" rx="-36.335" ry="22.953" rz="12.2603" jointIndex="15">
+						<Joint name="v4_B3_L" tx="0" ty="5.96046e-08" tz="-2.15301" rx="-23.0274" ry="14.3406" rz="0.69008" jointIndex="16" />
+					</Joint>
+				</Joint>
+				<Joint name="FU_1_L" tx="0.538699" ty="-0.161901" tz="0.183409" rx="-30.2087" ry="-151.882" rz="94.2879" jointIndex="17">
+					<Joint name="FU_2_L" tx="1.49012e-07" ty="-4.47035e-08" tz="-0.616358" rx="-34.557" ry="22.5953" rz="49.5714" jointIndex="18">
+						<Joint name="FU_3_L" tx="0" ty="2.98023e-08" tz="-0.644929" rx="1.52314" ry="18.7623" rz="56.2306" jointIndex="19" />
+					</Joint>
+				</Joint>
+				<Joint name="Zahn_L" tx="0.233564" ty="-0.202596" tz="0.505673" rx="-50.4616" ry="174.837" rz="-12.486" jointIndex="20" />
+				<Joint name="v_B1_R" tx="-0.580955" ty="-0.296619" tz="-0.4962" rx="16.6659" ry="141.046" rz="-12.6244" jointIndex="21">
+					<Joint name="v_B2_R" tx="-8.9407e-08" ty="0" tz="-1.59353" rx="-32.6284" ry="14.0596" rz="14.0469" jointIndex="22">
+						<Joint name="v_B3_R" tx="-2.38419e-07" ty="5.96046e-08" tz="-1.8424" rx="-28.121" ry="29.688" rz="-6.12398" jointIndex="23" />
+					</Joint>
+				</Joint>
+				<Joint name="v2_B1_R" tx="-0.589574" ty="-0.355595" tz="-0.832686" rx="20.6885" ry="105.377" rz="-56.6845" jointIndex="24">
+					<Joint name="v2_B2_R" tx="0" ty="2.98023e-08" tz="-1.46889" rx="-35.6182" ry="-24.7996" rz="84.9492" jointIndex="25">
+						<Joint name="v2_B3_R" tx="-2.98023e-07" ty="-8.9407e-08" tz="-2.04818" rx="-33.3095" ry="22.0454" rz="19.9334" jointIndex="26" />
+					</Joint>
+				</Joint>
+				<Joint name="v3_B1_R" tx="-0.589573" ty="-0.355596" tz="-1.15222" rx="17.1674" ry="79.7023" rz="62.1466" jointIndex="27">
+					<Joint name="v3_B2_R" tx="2.98023e-08" ty="0" tz="-1.3554" rx="-21.7856" ry="28.1138" rz="-106.223" jointIndex="28">
+						<Joint name="v3_B3_R" tx="-1.78814e-07" ty="0" tz="-1.82055" rx="-15.9161" ry="-31.4796" rz="-12.3772" jointIndex="29" />
+					</Joint>
+				</Joint>
+				<Joint name="v4_B1_R" tx="-0.564325" ty="-0.335539" tz="-1.48305" rx="11.3353" ry="44.1701" rz="10.8099" jointIndex="30">
+					<Joint name="v4_B2_R" tx="-1.3411e-07" ty="2.98023e-08" tz="-1.62559" rx="-36.3349" ry="-22.953" rz="-12.2603" jointIndex="31">
+						<Joint name="v4_B3_R" tx="-2.38419e-07" ty="5.96046e-08" tz="-2.15301" rx="-23.0274" ry="-14.3406" rz="-0.69008" jointIndex="32" />
+					</Joint>
+				</Joint>
+				<Joint name="FU_1_R" tx="-0.538703" ty="-0.1619" tz="0.183408" rx="-30.2088" ry="151.882" rz="124.386" jointIndex="33">
+					<Joint name="FU_2_R" tx="2.98023e-08" ty="-2.98023e-08" tz="-0.616358" rx="39.8347" ry="-8.04074" rz="54.7586" jointIndex="34">
+						<Joint name="FU_3_R" tx="5.96046e-08" ty="0" tz="-0.644929" rx="9.75869" ry="-16.1734" rz="48.6682" jointIndex="35" />
+					</Joint>
+				</Joint>
+				<Joint name="Zahn_R" tx="-0.233568" ty="-0.202596" tz="0.505672" rx="-50.4616" ry="-174.837" rz="-20.458" jointIndex="36" />
+			</Joint>
+		</Joint>
+		<Joint name="v_B3_L.001" tx="0.810986" ty="1.59346" tz="5.49929" rx="59.9844" ry="-89.9999" rz="20.011" jointIndex="37" />
+		<Joint name="v2_B3_L.001" tx="2.9912" ty="3.19758" tz="2.83839" rx="59.9845" ry="-90.0001" rz="20.0108" jointIndex="38" />
+		<Joint name="v3_B3_L.001" tx="4.44588" ty="2.72141" tz="-0.90609" rx="59.9844" ry="-90" rz="20.0109" jointIndex="39" />
+		<Joint name="v4_B3_L.001" tx="4.26924" ty="0.211226" tz="-3.66294" rx="59.9844" ry="-90.0001" rz="20.0108" jointIndex="40" />
+		<Joint name="v_B3_R.001" tx="-0.975306" ty="-1.49854" tz="5.49929" rx="-59.9843" ry="89.9999" rz="-20.0108" jointIndex="41" />
+		<Joint name="v2_B3_R.001" tx="-1.27587" ty="-4.18855" tz="2.83839" rx="-59.9843" ry="89.9999" rz="-20.0109" jointIndex="42" />
+		<Joint name="v3_B3_R.001" tx="-0.136719" ty="-5.21088" tz="-0.906091" rx="-59.9844" ry="89.9999" rz="-23.9532" jointIndex="43" />
+		<Joint name="v4_B3_R.001" tx="1.94962" ty="-3.80395" tz="-3.66294" rx="-59.9843" ry="89.9999" rz="-20.0108" jointIndex="44" />
+	</Joint>
+
+	<Mesh name="Spider_Fur" material="Spider_Fur.material.xml" batchStart="0" batchCount="960" vertRStart="0" vertREnd="393" />
+	<Mesh name="Spider_teeth" material="Spider_teeth.material.xml" batchStart="960" batchCount="540" vertRStart="394" vertREnd="573" />
+	<Mesh name="Spider" material="Spider.material.xml" batchStart="1500" batchCount="6408" vertRStart="574" vertREnd="1794" />
+	<Mesh name="Spider_Eyes" material="Spider_Eye.material.xml" batchStart="7908" batchCount="768" vertRStart="1795" vertREnd="2130" />
+</Model>

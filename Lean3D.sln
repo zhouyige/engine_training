@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lean3D", "Lean3D\Lean3D.vcxproj", "{E7672D81-B884-47CA-B835-ED8ED9C80868}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanGUI", "LeanGUI\LeanGUI.csproj", "{D8F7B06F-D5BD-4E5C-80AD-9AAE7AE640E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteeringBehavior", "SteeringBehavior\SteeringBehavior.csproj", "{93E9286C-EA91-40A3-A0C9-915E3F3CE911}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sampler1", "Sampler1\Sampler1.vcxproj", "{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +141,20 @@ Global
 		{93E9286C-EA91-40A3-A0C9-915E3F3CE911}.Release|Win32.Build.0 = Release|Any CPU
 		{93E9286C-EA91-40A3-A0C9-915E3F3CE911}.Release|x64.ActiveCfg = Release|Any CPU
 		{93E9286C-EA91-40A3-A0C9-915E3F3CE911}.Release|x64.Build.0 = Release|Any CPU
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|Win32.Build.0 = Debug|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|x64.ActiveCfg = Debug|x64
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Debug|x64.Build.0 = Debug|x64
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|Any CPU.ActiveCfg = Release|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|Win32.ActiveCfg = Release|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|Win32.Build.0 = Release|Win32
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|x64.ActiveCfg = Release|x64
+		{2D9050FB-A9E9-4849-BD0F-D237CB9FBF23}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

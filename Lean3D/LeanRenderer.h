@@ -31,7 +31,7 @@ namespace Lean3D {
 
 	typedef void(*RenderFunc)(uint32 firstItem, uint32 lastItem, const std::string &shaderContext,
 		const std::string &theClass, bool debugView, const Frustum *frust1,
-		const Frustum *frust2, RenderingOrder::List order, int occSet);
+		const Frustum *frust2, RenderingOrder order, int occSet);
 
 	struct RenderFuncListItem
 	{
@@ -138,7 +138,7 @@ namespace Lean3D {
 		void clearOverlays();
 
 		static void drawMeshes(uint32 firstItem, uint32 lastItem, const std::string &shaderContext, const std::string &theClass,
-			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);
+			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder order, int occSet);
 		/*static void drawParticles(uint32 firstItem, uint32 lastItem, const std::string &shaderContext, const std::string &theClass,
 			bool debugView, const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);*/
 
@@ -168,13 +168,13 @@ namespace Lean3D {
 		void clear(bool depth, bool buf0, bool buf1, bool buf2, bool buf3, float r, float g, float b, float a);
 		void drawFSQuad(Resource *matRes, const std::string &shaderContext);
 		void drawGeometry(const std::string &shaderContext, const std::string &theClass,
-			RenderingOrder::List order, int occSet);
+			RenderingOrder order, int occSet);
 		void drawLightGeometry(const std::string &shaderContext, const std::string &theClass,
-			bool noShadows, RenderingOrder::List order, int occSet);
+			bool noShadows, RenderingOrder order, int occSet);
 		void drawLightShapes(const std::string &shaderContext, bool noShadows, int occSet);
 
 		void drawRenderables(const std::string &shaderContext, const std::string &theClass, bool debugView,
-			const Frustum *frust1, const Frustum *frust2, RenderingOrder::List order, int occSet);
+			const Frustum *frust1, const Frustum *frust2, RenderingOrder order, int occSet);
 
 		void renderDebugView();
 		void finishRendering();

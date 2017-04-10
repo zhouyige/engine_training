@@ -86,11 +86,14 @@ namespace Lean3D
 		uint32 getTanVBOHandle() { return _tanVBOHandle; }
 		uint32 getStaticVBOHandle() { return _staticVBOHandle; }
 		uint32 getIndexVBOHandle() { return _indexVBOHandle; }
-		char *getIndexData(){ return _indexData; }
-		VertexTanData *getVertTanData() { return _vertTanData; }
-		VertexStaticData *getVertStaticData() { return _vertStaticData; }
+		char*				getIndexData(){ return _indexData; }
+		Vec3*				getVertPosData() { return _vertPosData; }
+		VertexTanData*		getVertTanData() { return _vertTanData; }
+		VertexStaticData*	getVertStaticData() { return _vertStaticData; }
+		Matrix4& getInvBindMat(uint32 jointIndex) { return _joints[jointIndex].invBindMat; }
+		bool     is16BitIndex() const { return _16BitIndices; }
 		
-		void updateDynaDataToGpu();
+		void	updateDynaDataToGpu();
 		
 		void genGeomResVAO(uint32 shaderHandle);
 

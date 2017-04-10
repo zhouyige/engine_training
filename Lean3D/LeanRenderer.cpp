@@ -71,7 +71,7 @@ namespace Lean3D
 	void LeanRenderer::clearOverlays()
 	{
 	}
-	void LeanRenderer::drawMeshes(uint32 firstItem, uint32 lastItem, const std::string & shaderContext, const std::string & theClass, bool debugView, const Frustum * frust1, const Frustum * frust2, RenderingOrder::List order, int occSet)
+	void LeanRenderer::drawMeshes(uint32 firstItem, uint32 lastItem, const std::string & shaderContext, const std::string & theClass, bool debugView, const Frustum * frust1, const Frustum * frust2, RenderingOrder order, int occSet)
 	{
 	}
 	void LeanRenderer::render(CameraNode * camNode)
@@ -112,16 +112,16 @@ namespace Lean3D
 	void LeanRenderer::drawFSQuad(Resource * matRes, const std::string & shaderContext)
 	{
 	}
-	void LeanRenderer::drawGeometry(const std::string & shaderContext, const std::string & theClass, RenderingOrder::List order, int occSet)
+	void LeanRenderer::drawGeometry(const std::string & shaderContext, const std::string & theClass, RenderingOrder order, int occSet)
 	{
 	}
-	void LeanRenderer::drawLightGeometry(const std::string & shaderContext, const std::string & theClass, bool noShadows, RenderingOrder::List order, int occSet)
+	void LeanRenderer::drawLightGeometry(const std::string & shaderContext, const std::string & theClass, bool noShadows, RenderingOrder order, int occSet)
 	{
 	}
 	void LeanRenderer::drawLightShapes(const std::string & shaderContext, bool noShadows, int occSet)
 	{
 	}
-	void LeanRenderer::drawRenderables(const std::string & shaderContext, const std::string & theClass, bool debugView, const Frustum * frust1, const Frustum * frust2, RenderingOrder::List order, int occSet)
+	void LeanRenderer::drawRenderables(const std::string & shaderContext, const std::string & theClass, bool debugView, const Frustum * frust1, const Frustum * frust2, RenderingOrder order, int occSet)
 	{
 	}
 	void LeanRenderer::renderDebugView()

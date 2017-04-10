@@ -1,0 +1,59 @@
+<Model name="man" geometry="man.geo">
+	<Joint name="ex_Bip01-node" tx="0" ty="13.7203" tz="-0.891777" rx="-0" ry="-90" rz="0" jointIndex="1">
+		<Joint name="ex_Bip01_Pelvis" rx="-1" ry="-90" rz="90" jointIndex="2">
+			<Joint name="ex_Bip01_Spine" tx="1.50942" ty="0" tz="0.0277056" rx="-0" ry="-0.954374" rz="0" jointIndex="3">
+				<Joint name="ex_Bip01_L_Thigh" tx="-1.50968" ty="1.52759" tz="-0.00255685" rx="16.1714" ry="-5.83369" rz="176.792" jointIndex="4">
+					<Joint name="ex_Bip01_L_Calf" tx="6.23314" ty="0" tz="0" rx="-0" ry="-11.4707" rz="0" jointIndex="5">
+						<Joint name="ex_Bip01_L_Foot" tx="5.78888" ty="0" tz="0" rx="-2.83985" ry="5.8317" rz="1.58584" jointIndex="6">
+							<Joint name="ex_Bip01_L_Toe0" tx="1.50968" ty="0" tz="-1.94289" rx="-0" ry="90" rz="0" jointIndex="7">
+								<Joint name="ex_Bip01_L_Toe01" tx="0.196915" ty="0" tz="0" jointIndex="8">
+									<Joint name="ex_Bip01_L_Toe02" tx="0.196914" ty="0" tz="0" jointIndex="9" />
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+				</Joint>
+				<Joint name="ex_Bip01_R_Thigh" tx="-1.50968" ty="-1.52759" tz="-0.00256531" rx="-16.85" ry="-7.26196" rz="-175.926" jointIndex="10">
+					<Joint name="ex_Bip01_R_Calf" tx="6.23314" ty="0" tz="0" rx="-0" ry="-13.8221" rz="0" jointIndex="11">
+						<Joint name="ex_Bip01_R_Foot" tx="5.78888" ty="0" tz="0" rx="-4.71146" ry="7.07452" rz="-1.96482" jointIndex="12">
+							<Joint name="ex_Bip01_R_Toe0" tx="1.50968" ty="0" tz="-1.94289" rx="-0" ry="90" rz="0" jointIndex="13">
+								<Joint name="ex_Bip01_R_Toe01" tx="0.196914" ty="0" tz="0" jointIndex="14">
+									<Joint name="ex_Bip01_R_Toe02" tx="0.196915" ty="0" tz="0" jointIndex="15" />
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+				</Joint>
+				<Joint name="ex_Bip01_Spine1" tx="1.70659" ty="0" tz="0.00135893" jointIndex="16">
+					<Joint name="ex_Bip01_Spine2" tx="1.7068" ty="0" tz="0.00189942" rx="-0" ry="6.30408" rz="0" jointIndex="17">
+						<Joint name="ex_Bip01_Spine3" tx="2.3999" ty="0" tz="0.00137144" jointIndex="18">
+							<Joint name="ex_Bip01_Neck" tx="1.72225" ty="0" tz="0.00123899" rx="-0" ry="1.39418" rz="0" jointIndex="19">
+								<Joint name="ex_Bip01_Head" tx="1.55661" ty="0" tz="0" rx="-0" ry="-2.32429" rz="0" jointIndex="20" />
+								<Joint name="ex_Bip01_L_Clavicle" tx="0" ty="0.657965" tz="-0.00123787" rx="-0" ry="178.56" rz="90" jointIndex="21">
+									<Joint name="ex_Bip01_L_UpperArm" tx="3.05355" ty="0" tz="0" rx="3.03081" ry="2.00137" rz="-58.614" jointIndex="22">
+										<Joint name="ex_Bip01_L_Forearm" tx="5.10318" ty="0" tz="0" rx="-0" ry="-19.6071" rz="0" jointIndex="23">
+											<Joint name="ex_Bip01_L_Hand" tx="4.86969" ty="0" tz="0" rx="-75.5681" ry="-16.0634" rz="14.7396" jointIndex="24" />
+										</Joint>
+									</Joint>
+								</Joint>
+								<Joint name="ex_Bip01_R_Clavicle" tx="0" ty="-0.657965" tz="-0.0012409" rx="-0" ry="178.56" rz="-90" jointIndex="25">
+									<Joint name="ex_Bip01_R_UpperArm" tx="3.05355" ty="0" tz="0" rx="-4.42352" ry="2.85367" rz="58.5586" jointIndex="26">
+										<Joint name="ex_Bip01_R_Forearm" tx="5.10318" ty="0" tz="0" rx="-0" ry="-19.6071" rz="0" jointIndex="27">
+											<Joint name="ex_Bip01_R_Hand" tx="4.86969" ty="0" tz="0" rx="75.5681" ry="-16.0635" rz="-14.7396" jointIndex="28" />
+										</Joint>
+									</Joint>
+								</Joint>
+							</Joint>
+						</Joint>
+					</Joint>
+				</Joint>
+			</Joint>
+		</Joint>
+	</Joint>
+
+	<Mesh name="an"  batchStart="0" batchCount="3978" vertRStart="0" vertREnd="801">
+		<Mesh name="man"  batchStart="3978" batchCount="2910" vertRStart="802" vertREnd="1506" />
+		<Mesh name="man"  batchStart="6888" batchCount="6384" vertRStart="1507" vertREnd="2840" />
+		<Mesh name="man"  batchStart="13272" batchCount="5466" vertRStart="2841" vertREnd="4359" />
+	</Mesh>
+</Model>

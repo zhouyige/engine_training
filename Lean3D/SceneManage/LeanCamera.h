@@ -62,7 +62,7 @@ namespace Lean3D
 		Vec3                _absPos;
 		int					_vpX, _vpY, _vpWidth, _vpHeight;
 		float               _frustLeft, _frustRight, _frustBottom, _frustTop;
-		float               _fovOrWidth;  // if is ortho this variable is width
+		float               _fovOrWidth;  // if is ortho this variable mean width
 		float				_aspect;
 		float               _frustNear, _frustFar;
 		int                 _outputBufferIndex;

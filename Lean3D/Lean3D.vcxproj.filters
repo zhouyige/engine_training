@@ -137,6 +137,18 @@
     <ClInclude Include="SceneManage\LeanCamera.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManage\LeanJoint.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanMesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManage\LeanModel.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="LeanAnimation.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LeanGPUTimer.cpp">
@@ -215,6 +227,18 @@
       <Filter>SourceCode</Filter>
     </ClCompile>
     <ClCompile Include="SceneManage\LeanCamera.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanJoint.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanMesh.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManage\LeanModel.cpp">
+      <Filter>SourceCode</Filter>
+    </ClCompile>
+    <ClCompile Include="LeanAnimation.cpp">
       <Filter>SourceCode</Filter>
     </ClCompile>
   </ItemGroup>
