@@ -17,7 +17,7 @@
 #endif
 
 
-namespace Horde3D {
+namespace Lean3D {
 
 class Timer
 {

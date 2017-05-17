@@ -2,6 +2,7 @@
 #include "LeanUtil.h"
 #include "glus.h"
 #include <string>
+#include "LeanPrerequisites.h"
 
 namespace Lean3D
 {
@@ -28,7 +29,7 @@ namespace Lean3D
 		uint32 _bufferTotalMem;
 		VertexAttribLayoutList                _curVertexLayout;
 		ReferenceObjList< VIBuffer >        _buffersReflist;
-		ReferenceObjList< uint32 > _vaoReflist;
+		ReferenceObjList< uint32 >			_vaoReflist;
 
 	};
 

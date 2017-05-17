@@ -374,7 +374,7 @@ GLAPI void GLAPIENTRY glViewport (GLint x, GLint y, GLsizei width, GLsizei heigh
 #endif  // GL_VERSION_1_1
 
 
-namespace h3dGL
+namespace Lean3DGL
 {
 // GL 1.2
 #ifndef GL_VERSION_1_2
@@ -904,14 +904,14 @@ typedef const GLubyte * (GLAPIENTRYP PFNGLGETSTRINGIPROC) (GLenum, GLuint);
 extern PFNGLGETSTRINGIPROC glGetStringi;
 
 #endif // GL_VERSION_3_0
-}  // namespace h3dGL
+}  // namespace
 
 
 // =================================================================================================
 // Extensions
 // =================================================================================================
 
-namespace h3dGL
+namespace Lean3DGL
 {
 // EXT_framebuffer_object
 #ifndef GL_EXT_framebuffer_object

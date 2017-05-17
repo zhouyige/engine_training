@@ -22,7 +22,7 @@ namespace glExt
 }
 
 
-namespace h3dGL
+namespace Lean3DGL
 {
 // GL 1.2
 PFNGLBLENDCOLORPROC glBlendColor = 0x0;
